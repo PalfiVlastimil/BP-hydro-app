@@ -1,0 +1,90 @@
+import time
+import sys
+import os
+import traceback
+sys.path.append('sensors/grove')
+sys.path.append('sensors/other')
+
+#importing classes from modules
+from grove_dht22 import DHT22
+from grove_servo import GroveServo
+from grove_water_level_sensor import GroveWaterLevelSensor
+from grove_tds import GroveTDS
+
+#importing modules
+import ds18b20_water_temp
+import ph_meter
+import water_flow_meter
+from picamera2 import Picamera2, Preview
+
+# Grove AD convertor pin
+GROVE_ADC_IN_0 = 0;
+# pins
+GROVE_GPIO_12_PIN    = 12
+GROVE_GPIO_26_PIN    = 26
+GROVE_I2C_GPIO_0_PIN = 0
+GROVE_I2C_GPIO_1_PIN = 1
+
+app_is_running = True
+picam2 = Picamera2()
+
+def clear_console():
+    command = 'clear'
+    if os.name in ('nt', 'dos'):  # If computer is running windows use cls
+        command = 'cls'
+    os.system(command)
+
+def switch_menu(number):
+  if number == 1:
+    dht22_sensor = DHT22(GROVE_GPIO_12_PIN)
+    dht22_sensor.loop_sensor()
+  elif number == 2:
+    servo = GroveServo(GROVE_GPIO_26_PIN)
+    servo.sweep(True)
+  elif number == 3:
+    water_level = GroveWaterLevelSensor(GROVE_I2C_GPIO_1_PIN)
+    water_level.loop_sensor(True)
+  elif number == 4:
+    sensor = GroveTDS(GROVE_ADC_IN_0)
+    sensor.loop_sensor(True)
+  elif number == 5:
+    ds18b20_water_temp.loop_sensor()
+  elif number == 6:
+    ph_meter.print_sensor_data()
+  elif number == 7:
+    water_flow_meter.loop_sensor()
+  elif number == 8:
+    global picam2
+    timestr = time.strftime("%d%m%y-%H%M%S")
+    picam2.start_and_record_video(timestr + ".mp4", duration=5)
+  else:
+    print("Nevalidní vstup. Zkuste to ještě jednou.")
+    return
+
+def main():
+  global app_is_running
+  print("Vítej v testoavací aplikaci")
+  #Initialize all sensors
+  while app_is_running:
+    print("Vyber si senzor:")    
+    print("01. Grove - DHT22 senzor                (Funguje)")    
+    print("02. Grove - Servo                       (Funguje)")    
+    print("03. Grove - Senzor vodní hladiny        (Funguje)")    
+    print("04. Grove - TDS senzor                  (Funguje)")    
+    print("05. Other - Vodní senzor DS18B20        (Funguje)")    
+    print("06. Other - PH metr                     (Bude fungovat)")    
+    print("07. Other - Senzor vodního toku         (Funguje)")
+    print("08. Preview kamerky                     (Funguje)")
+    print("09. Ukončit program")
+    try:
+      number_input = int(input("Vyber si z těchto možností [1-9]:"))
+      switch_menu(number_input)
+      if number_input == 9:
+        app_is_running = False
+        break
+    except Exception as error:
+      print("Error zpráva:", error)
+      traceback.print_exc()
+  print("Ukončuje se program…")
+if __name__ == "__main__":
+  main()
