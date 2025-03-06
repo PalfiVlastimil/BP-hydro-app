@@ -37,7 +37,6 @@ def clear_console():
 def switch_menu(number):
   if number == 1:
     dht22_sensor = DHT22(GROVE_GPIO_12_PIN)
-    dht22_sensor.loop_sensor()
   elif number == 2:
     servo = GroveServo(GROVE_GPIO_26_PIN)
     servo.sweep(True)
@@ -72,7 +71,7 @@ def main():
     print("03. Grove - Senzor vodní hladiny        (Funguje)")    
     print("04. Grove - TDS senzor                  (Funguje)")    
     print("05. Other - Vodní senzor DS18B20        (Funguje)")    
-    print("06. Other - PH metr                     (Bude fungovat)")    
+    print("06. Other - PH metr                     (Funguje)")    
     print("07. Other - Senzor vodního toku         (Funguje)")
     print("08. Preview kamerky                     (Funguje)")
     print("09. Ukončit program")

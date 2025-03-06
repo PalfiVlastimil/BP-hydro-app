@@ -7,7 +7,7 @@ def get_sensor():
             ds18b20 = i
     return ds18b20
 
-def read(ds18b20):
+def read_sensor_data(ds18b20):
     location = '/sys/bus/w1/devices/' + ds18b20 + '/w1_slave'
     tfile = open(location)
     text = tfile.read()
@@ -22,14 +22,14 @@ def read(ds18b20):
 def loop(ds18b20):
     while True:
         try:
-            if read(ds18b20) != None:
-                print("Current temperature : %0.3f C" % read(ds18b20))
+            if read_sensor_data(ds18b20) != None:
+                print("Current temperature : %0.3f C" % read_sensor_data(ds18b20))
         except KeyboardInterrupt:
             #kill()
             break
 
-def print_sensor_data(self):
-    print("Current temperature : %0.3f C" % read(ds18b20))
+def print_sensor_data(ds18b20):
+    print("Current temperature : %0.3f C" % read_sensor_data(ds18b20))
 
 def kill():
     quit()

@@ -1,0 +1,1001 @@
+    2  Tig
+    3  ip a
+    4  apt update
+    5  sudo apt update
+    6  apt upgrade
+    7  sudo apt upgrade
+    8  sudo nano /boot/config.txt
+    9  sudo nano /boot/firmware/config.txt
+   10  sudo utmpdump /var/log/utmp
+   11  utmpdump /var/log/wtmp
+   12  ip a
+   13  geany &
+   14  nmtui
+   15  sudo nmtui
+   16  exit
+   17  libcamera-hello 
+   18  rpicam-hello 
+   19  rpicam-hello --timeout 0
+   20  rpicam-hello --info-text "red gain %rg, blue gain %bg"
+   21  man rpicam-hello
+   22  rpicam-hello --timeout 10000
+   23  rpicam-hello --help
+   24  rpicam-hello --info-text "red gain %rg, blue gain %bg" --timeout 10000
+   25  rpicam-hello --help
+   26  libcamera-still -o test.jpg
+   27  libcamera-still --help
+   28  libcamera-vid -t 10000 -o test.h264
+   29  libcamera-vid -t 0 --autofocus-mode auto
+   30  libcamera-vid --help
+   31  libcamera-vid -t 10000 -o test.h264
+   32  libcamera-vid -t 10000 -o test2.h264
+   33  libcamera-vid -t 5000 --datetime -n --timelapse 1000 test.h264
+   34  libcamera-vid -t 5000 --datetime -n --timelapse 1000 -O  test.h264
+   35  libcamera-vid -t 5000 --datetime -n --timelapse 1000 -o test.h264
+   36  libcamera-vid -t 5000 --timelapse 1000 -o test.h264
+   37  libcamera-vid -t 10000 -o test2.h264
+   38  libcamera-vid --help
+   39  libcamera-vid --help | grep 'timelapse'
+   40  libcamera-vid --help | grep timelapse
+   41  libcamera-still --help
+   42  libcamera-still --help | grep timelapse
+   43  libcamera-raw -t 2000 -o test.raw
+   44  ls
+   45  ls ./
+   46  ls ../
+   47  ls
+   48  ls -la
+   49  ls -la | grep .ssh
+   50  ls -la | grep ssh
+   51  ls
+   52  ls -la
+   53  ls -la | grep ssh
+   54  chmod 700 ~/.ssh
+   55  mkdir -p ~/.ssh
+   56  ls -la | grep ssh
+   57  nano ~/.ssh/authorized_keys
+   58  chmod 700 ~/.ssh
+   59  chmod 600 ~/.ssh/authorized_keys
+   60  sudo nano /etc/ssh/sshd_config
+   61  sudo systemctl restart ssh
+   62  chmod 600 ~/.ssh/authorized_keys
+   63  nano ~/.ssh/authorized_keys
+   64  sudo systemctl restart ssh
+   65  nano ~/.ssh/authorized_keys
+   66  sudo ufw status
+   67  ls
+   68  mkdir hydroponics
+   69  cd hydroponics/
+   70  git clone https://github.com/Seeed-Studio/grove.py
+   71  ls
+   72  ls grove.py/
+   73  cd grove.py/grove
+   74  nano TDS.py
+   75  python TDS.py 0
+   76  ls
+   77  python TDS.py
+   78  python TDS.py 0
+   79  pip install grove.py
+   80  pip3 install grove.py
+   81  pip3 show grove.py
+   82  python3 --version
+   83  python TDS.py 0
+   84  nano TDS.py
+   85  sudo pip install
+   86  sudo pip3 install .
+   87  cd ..
+   88  sudo pip3 install .
+   89  sudo pip install
+   90  sudo pip install .
+   91  sudo pip3 install .
+   92  cd ..
+   93  sudo pip3 install .c
+   94  cd grove.py/
+   95  pip install .
+   96  ls
+   97  cd grove
+   98  ls
+   99  ls | grep venv
+  100  cd ..
+  101  ls
+  102  python3 -m venv ~/hydroponics/venv
+  103  sudo pip3 install .
+  104  sudo pip3 install . --break-system-packages
+  105  cd grove/
+  106  ls
+  107  python TDS.py 0
+  108  python TDS.py
+  109  python3 TDS.py
+  110  python3 TDS.py 0
+  111  curl -sL https://github.com/Seeed-Studio/grove.py/raw/master/install.sh | sudo bash -s -
+  112  python3 TDS.py 0
+  113  cd 
+  114  ls
+  115  cd hydroponics/
+  116  cd ..
+  117  git clone https://github.com/Seeed-Studio/grove.py
+  118  sudo pip3 install .
+  119  sudo apt install python3-virtualenv
+  120  virtualenv -p python3 env
+  121  source env/bin/activate
+  122  pip3 install .
+  123  ls
+  124  ls env
+  125  rm -rfv env
+  126  ls
+  127  cd grove.py/
+  128  sudo apt install python3-virtualenv
+  129  virtualenv -p python3 env
+  130  source env/bin/activate
+  131  pip3 install .
+  132  cd grove/
+  133  nano TDS.py
+  134  python TDS.py 0
+  135  ls | grep boot
+  136  ls .. | grep boot
+  137  ls
+  138  cd ..
+  139  ls
+  140  sudo nano /boot/config
+  141  sudo nano /boot/config.txt
+  142  sudo rm /boot/config
+  143  rm /boot/config
+  144  sudo nano /boot/config.txt
+  145  sudo nano /boot/firmware/config.txt
+  146  lsmod | grep i2c-dev
+  147  sudo modprobe i2c-dev
+  148  sudo nano /etc/modules
+  149  lsmod | grep i2c-dev
+  150  python TDS.py 0
+  151  cd grove/
+  152  python TDS.py 0
+  153  lsmod|i2c
+  154  lsmod
+  155  lsmod | grep i2c
+  156  sudo modprobe i2c-dev
+  157  lsmod | grep i2c
+  158  python TDS.py 0
+  159  raspi-config
+  160  sudo raspi-config
+  161  ip a
+  162  sudo nano /boot/config
+  163  sudo nano /boot/config.txt
+  164  sudo nano /boot/firmware/config.txt 
+  165  sudo reboot
+  166  #!/usr/bin/env python
+  167  import os
+  168  def sensor():
+  169  def loop(ds18b20):
+  170  def kill():
+  171  sudo nano ds18b20-water-temp.py
+  172  python ds18b20-water-temp.py 
+  173  sudo nano ds18b20-water-temp.py
+  174  python ds18b20-water-temp.py 
+  175  sudo nano ds18b20-water-temp.py
+  176  python ds18b20-water-temp.py 
+  177  sudo nano ds18b20-water-temp.py
+  178  python ds18b20-water-temp.py 
+  179  sudo modprobe w1-gpio 
+  180  sudo modprobe w1-therm
+  181  cd /sys/bus/w1/devices/
+  182  ls
+  183  cd ./28-20bcd44690d18
+  184  cd 28-20bcd44690d1
+  185  ls
+  186  cat w1_slaveb
+  187  nano ds18b20-water-temp.py
+  188  sudo nano ds18b20-water-temp.py
+  189  history
+  190  sudo apt install onboard
+  191  sudo apt install at-spi2-coresud
+  192  su - pi 
+  193  su -  
+  194  sudo raspi-config
+  195  sudo nano ds18b20-water-temp.py
+  196  sudo ds18b20-water-temp.py
+  197  ls
+  198  ls -la
+  199  cd .ssh/
+  200  ls
+  201  sudo nano authorized_keys 
+  202  ip a 
+  203  python TDS.py 0
+  204  cd grove.py/grove/
+  205  cd ~/grove.py/grove/
+  206  python TDS.py 0
+  207  ls --/
+  208  ls ..
+  209  cd ~/hydro-app/
+  210  ls
+  211  cd sensors/grove/
+  212  python TDS.py 0
+  213  python TDS.py 3
+  214  python TDS.py 25
+  215  python TDS.py 
+  216  python TDS.py 3 3
+  217  python TDS.py 3 3 3 
+  218  cd ../other/
+  219  python ds18b20-water-temp.py
+  220  ls /devices
+  221  ls devices
+  222  ls
+  223  ls /devices
+  224  cd /sys/bus
+  225  ls
+  226  cd w1/
+  227  ls
+  228  cd devices/
+  229  ls
+  230  sudo apt-get install git
+  231  sudo apt-get install libffi-dev
+  232  git clone https://github.com/micropython/micropython.git
+  233  ls -la
+  234  cd micropython/
+  235  cd ports
+  236  cd unix
+  237  make clean
+  238  make axtls
+  239  make clean
+  240  cd !
+  241  cd home
+  242  cd /home/vlastimil-palfi/
+  243  cd micropython/
+  244  cd mpy-cross
+  245  make
+  246  ls
+  247  cd ..
+  248  cd ports/unix/
+  249  make
+  250  cd ..
+  251  cd unix
+  252  make clean
+  253  make axtls
+  254  cd micropython
+  255  cd ../..
+  256  git pull
+  257  cd ports
+  258  cd unix
+  259  make clean
+  260  make axtls
+  261  make
+  262  make clean
+  263  ls
+  264  make axtls
+  265  make submodules
+  266  make
+  267  cd ../..
+  268  cd mpy-cross/
+  269  make
+  270  cd ..
+  271  ls
+  272  cd ..
+  273  ./micropython/
+  274  cd micropython/ports/unix/build-standard/
+  275  ls
+  276  ./micropython 
+  277  ls -la
+  278  cd /home/vlastimil-palfi/micropython/ports/unix
+  279  make test
+  280  cd ../../tests/
+  281  ./run-tests
+  282  ls -la
+  283  ./run-tests.py 
+  284  cd ../ports/unix/build-standard/
+  285  ./micropython upip install micropython-socket
+  286  ./micropython -m upip install micropython-socket
+  287  cd ../../
+  288  cd unix
+  289  make MICROPY_PY_SSL=1
+  290  ./micropython -m upip install micropython-socket
+  291  cd ~/micropython/ports/unix/build-standard $
+  292  cd ~/micropython/ports/unix/build-standard
+  293  ls
+  294  ./micropython -m upip install micropython-socket
+  295  cd ../
+  296  make clean
+  297  make MICROPY_PY_SSL=1
+  298  make clean
+  299  make submodules
+  300  make MICROPY_PY_SSL=1
+  301  ls
+  302  cd build-standard/
+  303  ./micropython -m upip install micropython-socket
+  304  cd ~
+  305  pip install smbus2 adafruit-circuitpython-dht
+  306  apt install python
+  307  sudo apt install python
+  308  sudo pip install smbus2 adafruit-circuitpython-dht
+  309  pip install smbus2
+  310  sudo apt install python3-venv
+  311  pip install smbus2 adafruit-circuitpython-dht
+  312  apt install python-smbus2
+  313  sudo apt install python-smbus2
+  314  python3 -m venv myenv
+  315  source myenv/bin/activate
+  316  pip install smbus2 adafruit-circuitpython-dht
+  317  pip3 install smbus2 adafruit-circuitpython-dht
+  318  deactivate
+  319  sudo pip3 install smbus2 adafruit-circuitpython-dht
+  320  sudo apt install pip
+  321  pip3 install smbus2 adafruit-circuitpython-dht
+  322  pip install smbus2 adafruit-circuitpython-dht
+  323  cd sensors/grove/
+  324  python DHT20.py &
+  325  python DHT20.py
+  326  python dht20_demo2.py 
+  327  passwd
+  328  raspi-config
+  329  sudo raspi-config
+  330  cd lib/
+  331  git clone https://github.com/Seeed-Studio/Seeed_Python_DHT.git
+  332  cd Seeed_Python_DHT/
+  333  sudo python setup.py install
+  334  history
+  335  pip3 install smbus2 adafruit-circuitpython-dht
+  336  cd examples/
+  337  nano dht_simpleread.py 
+  338  python dht_simpleread.py 
+  339  cd ~/hydro-app/
+  340  cd sensors/grove/
+  341  python DHT22.py 
+  342  python grove_water_level_sensor.py 
+  343  cd ../other/
+  344  python PH_meter.py 
+  345  cd ~/hydro-app
+  346  python -m venv venv
+  347  source venv/bin/activate
+  348  pip3 install adafruit-blinka adafruit-circuitpython-ads1x15
+  349  sudo i2cdetect -y 1
+  350  sudo i2cget -y 1 0x08
+  351  sudo i2cdetect -y 1
+  352  cd other
+  353  cd sensors/other/
+  354  python PH_meter.py 
+  355  cd ~/hydro
+  356  cd ~/hydro-app
+  357  cd lib
+  358  git clone https://github.com/DonavanMartin/DS18B20_YF-S201_RaspberryPi.git
+  359  python main.py -pin 8
+  360  cd YF-S201/
+  361  python main.py -pin 8
+  362  python main.py -p 8
+  363  cd ~/hydro-app/
+  364  cd sensors/other/
+  365  python water_flow_meter.py -p 8
+  366  cd sensors/other/
+  367  python water_flow_meter.py 
+  368  python PH_meter.py 
+  369  source ~/hydro-app/venv/bin/activate
+  370  python PH_meter.py 
+  371  sudo i2c
+  372  sudo i2cget -y 1 0x08
+  373  sudo i2cget -y 1
+  374  sudo i2cget -y 1 8
+  375  sudo i2cget -y 1 0x08
+  376  sudo i2cget -y 1 8 0x00
+  377  sudo i2cget -y 1 8 0x01
+  378  sudo i2cdump -y 1 8
+  379  sudo i2cdump -y 1
+  380  sudo /boot/config.txt
+  381  sudo nano /boot/config.txt
+  382  sudo nano /boot/firmware/config.txt
+  383  i2cdetect -y 1
+  384  reboot 
+  385  sudo reboot
+  386  cd sensors/other/
+  387  python PH_meter.py 
+  388  source ~/hydro-app/venv/bin/activate
+  389  python PH_meter.py 
+  390  i2cdetect -y 1
+  391  sudo nano /boot/firmware/config.txt
+  392  sudo i2cdetect -y 1
+  393  sudo i2cget -y 1 0x48
+  394  ls /dev/i2c-1
+  395  sudo raspi-config
+  396  sudo reboot
+  397  i2cdetect -y 1
+  398  sudo dtoverlay -r ads1115
+  399  sudo dtoverlay ads1115
+  400  dmesg | grep ads
+  401  sudo rmmod i2c_bcm2835
+  402  sudo i2cdump -y 1 0x48
+  403  sudo i2cget -y 1 0x48 0x00 w
+  404  sudo sudo modprobe -r ads1015
+  405  sudo modprobe -r ads1115
+  406  sudo dtoverlay ads1115
+  407  dmesg | tail -20
+  408  ls /dev/i2c-1
+  409  dmesg | grep i2c
+  410  source ~/hydro-app/venv/bin/activate
+  411  pip install adafruit-circuitpython-ads1x15
+  412  cd sensors/other/
+  413  python PH
+  414  python PH_meter.py 
+  415  sudo nano /boot/firmware/config.txt 
+  416  sudo reboot 
+  417  cd sensors/other/
+  418  ls
+  419  python PH_meter.py 
+  420  source ~/hydro-app/venv/bin/activate
+  421  ls
+  422  python PH_meter.py 
+  423  shutdown
+  424  sudo shutdown
+  425  sudo shutdown now
+  426  ip a 
+  427  /bin/python /home/vlastimil-palfi/.vscode-server/extensions/ms-python.python-2025.0.0-linux-armhf/python_files/printEnvVariablesToFile.py /home/vlastimil-palfi/.vscode-server/extensions/ms-python.python-2025.0.0-linux-armhf/python_files/deactivate/bash/envVars.txt
+  428  sudo apt install rpi-connect
+  429  ls
+  430  sudo openconnect https://vpn.tul.cz/ --authgroup=TUL --user=vlastimil.palfi@tul.cz 
+  431  sudo openconnect https://vpn.tul.cz/ --authgroup=TUL --user=vlastimil.palfi@tul.cz &
+  432  sudo apt update
+  433  sudo apt full-upgrade
+  434  sudo apt install rpi-connect
+  435  rpi-connect on
+  436  sudo apt install rpi-connect-lite
+  437  sudo apt install rpi-connect
+  438  sudo systemctl status ssh
+  439  hostname -I
+  440  sudo apt install openconnect -y
+  441  sudo openconnect -b TUL --user=vlastimil.palfi@tul.cz
+  442  sudo openconnect -b vpn.tul.cz --user=vlastimil.palfi@tul.cz
+  443  sudo openconnect -b vpn.tul.cz
+  444  Password:
+  445  POST https://vpn.tul.cz/
+  446  XML response has no "auth" node
+  447  Failed to complete auth
+  448  sudo openconnect https://vpn.tul.cz/ --authgroup=TUL --user=vlastimil.palfi@tul.cz 
+  449  ssh m1sticus@ori.nti.tul.cz
+  450  ssh m1st1cus@ori.nti.tul.cz
+  451  ssh-keygen -t ed25519 
+  452  ssh-copy-id -i ~/.ssh/id_ed25519.pub vlastimil-palfi@raspberrypi
+  453  ssh-copy-id -i ~/.ssh/id_ed25519 m1st1cu@ori.nti.tul.cz
+  454  ssh-copy-id -i ~/.ssh/id_ed25519 m1st1cus@ori.nti.tul.cz
+  455  cat ~/.ssh/id_ed25519.pub
+  456  ssh m1st1cus@ori.nti.tul.cz
+  457  python main.py
+  458  /home/vlastimil-palfi/hydro-app/venv/bin/python /home/vlastimil-palfi/hydro-app/main.py
+  459  python main.py 
+  460  source ~/hydro-app/venv/bin/activate
+  461  deactivate
+  462  /usr/bin/python /home/vlastimil-palfi/.vscode-server/extensions/ms-python.python-2025.0.0-linux-armhf/python_files/printEnvVariablesToFile.py /home/vlastimil-palfi/.vscode-server/extensions/ms-python.python-2025.0.0-linux-armhf/python_files/deactivate/bash/envVars.txt
+  463  python main.py 
+  464  /home/vlastimil-palfi/hydro-app/venv/bin/python /home/vlastimil-palfi/hydro-app/main.py
+  465  source venv/bin/activate
+  466  /home/vlastimil-palfi/hydro-app/venv/bin/python /home/vlastimil-palfi/hydro-app/main.py
+  467  python --version
+  468  python3 --version
+  469  pip install grove.py
+  470  python main.py
+  471  python ./sensors/grove/
+  472  python ./sensors/grove/dht22.py
+  473  python main.py
+  474  pip install numpy
+  475  python main.py
+  476  pip uninstall numpy -y
+  477  pip install numpy
+  478  python main.py
+  479  pip uninstall numpy -y
+  480  pip3 install numpy
+  481  python main.py
+  482  pip uninstall numpy
+  483  sudo apt-get install libopenblas-dev
+  484  grep MemTotal /proc/meminfo.
+  485  cat /proc/cpuinfo
+  486  df -Bm
+  487  df -h
+  488  sudo openconnect https://vpn.tul.cz/ --authgroup=TUL --user=vlastimil.palfi@tul.cz 
+  489  /bin/python /home/vlastimil-palfi/.vscode-server/extensions/ms-python.python-2025.0.0-linux-armhf/python_files/printEnvVariablesToFile.py /home/vlastimil-palfi/.vscode-server/extensions/ms-python.python-2025.0.0-linux-armhf/python_files/deactivate/bash/envVars.txt
+  490  ssh m1st1cus@ori.nti.tul.cz
+  491  sudo openconnect https://vpn.tul.cz/ --authgroup=TUL --user=vlastimil.palfi@tul.cz 
+  492  ip a 
+  493  hostname -I
+  494  ping  m1st1cus@ori.nti.tul.cz
+  495  ping  ori.nti.tul.cz
+  496  hostname -I
+  497  ip a
+  498  route -n | grep 'UG[ \t]' | awk '{print $2}'
+  499  ip a
+  500  hostname -I
+  501  curl -L https://install.pivpn.io | bash
+  502  pivpn add
+  503  ls
+  504  cd Downloads/
+  505  sudo dpkg -i code_1.97.0-1738713410_amd64.deb 
+  506  ls
+  507  sudo dpkg -i code_1.97.0-1738712359_armhf.deb 
+  508  code
+  509  cd hydro-app/
+  510  python main.py 
+  511  vim main.py 
+  512  vi main.py 
+  513  touch ~/.vimrc
+  514  nano ~/.vimrc
+  515  vi main.py 
+  516  nano ~/.vimrc
+  517  vi main.py 
+  518  sudo apt-get install vim
+  519  vim main.py 
+  520  code
+  521  cd hydro-app/
+  522  vim main.py 
+  523  ls
+  524  ls /
+  525  ls ~
+  526  ls ~ | grep vim
+  527  ls -la  ~ 
+  528  ls -la  ~ | grep .
+  529  ls -la  ~ | grep '.'
+  530  ls -la  ~ | grep .vim
+  531  sudo nano  ~/.vimrc
+  532  vim main.py 
+  533  vim README.md 
+  534  source venv/bin/activate
+  535  vim main.py 
+  536  python main.py 
+  537  ls
+  538  vim sensors/other/
+  539  python main.py 
+  540  python main.py -p 10
+  541  python main.py
+  542  vim main.py 
+  543  python sensors/other/
+  544  python sensors/other/water_flow_meter.py 
+  545  vim  sensors/other/water_flow_meter.py 
+  546  python main.py 
+  547  python sensors/other/water_flow_meter.py 
+  548  vim  sensors/other/water_flow_meter.py 
+  549  python main.py 
+  550  vim main.py 
+  551  cat sensors/grove/ | grep setMode
+  552  cat sensors/grove/*.py | grep setMode
+  553  cat sensors/grove/*.py | grep setmode
+  554  vim  sensors/other/water_flow_meter.py 
+  555  cat sensors/grove/*.py | grep setmode
+  556  python main.py 
+  557  vim main.py 
+  558  vim  sensors/other/water_flow_meter.py 
+  559  vim ../.vimsrc
+  560  vim ../.vimrc
+  561  vim main.py 
+  562  vim  sensors/other/water_flow_meter.py 
+  563  vim main.py 
+  564  python main.py 
+  565  vim main.py 
+  566  /bin/python /home/vlastimil-palfi/.vscode-server/extensions/ms-python.python-2025.0.0-linux-armhf/python_files/printEnvVariablesToFile.py /home/vlastimil-palfi/.vscode-server/extensions/ms-python.python-2025.0.0-linux-armhf/python_files/deactivate/bash/envVars.txt
+  567  /home/vlastimil-palfi/hydro-app/venv/bin/python /home/vlastimil-palfi/hydro-app/main.py
+  568  sudo chown -R vlastimil-palfi  ~/hydro-app
+  569  vim main.py 
+  570  python main.py 
+  571  python main.py
+  572  source venv/bin/activate
+  573  python main.py
+  574  systemctl | grep failed
+  575  python main.py
+  576  reboot
+  577  sudo -r reboot
+  578  sudo  reboot
+  579  /usr/bin/python /home/vlastimil-palfi/.vscode-server/extensions/ms-python.python-2025.0.0-linux-armhf/python_files/printEnvVariablesToFile.py /home/vlastimil-palfi/.vscode-server/extensions/ms-python.python-2025.0.0-linux-armhf/python_files/deactivate/bash/envVars.txt
+  580  source venv/bin/activate
+  581  deactivate
+  582  /usr/bin/python /home/vlastimil-palfi/.vscode-server/extensions/ms-python.python-2025.0.0-linux-armhf/python_files/printEnvVariablesToFile.py /home/vlastimil-palfi/.vscode-server/extensions/ms-python.python-2025.0.0-linux-armhf/python_files/deactivate/bash/envVars.txt
+  583  python main.py 
+  584  source venv/bin/activate
+  585  python main.py 
+  586  python sensors/grove/GroveTDS.py 
+  587  python sensors/grove/GroveTDS.py 0
+  588  python sensors/grove/GroveTDS.py 1
+  589  python sensors/grove/GroveTDS.py 3
+  590  python sensors/grove/GroveTDS.py 2
+  591  deactivate 
+  592  python sensors/grove/GroveTDS.py 2
+  593  python main.py 
+  594  sudo i2cdetect -y 1
+  595  python main.py 
+  596  /usr/bin/python /home/vlastimil-palfi/.vscode-server/extensions/ms-python.python-2025.0.0-linux-armhf/python_files/printEnvVariablesToFile.py /home/vlastimil-palfi/.vscode-server/extensions/ms-python.python-2025.0.0-linux-armhf/python_files/deactivate/bash/envVars.txt
+  597  sudo apt install -y python3-libcamera
+  598  sudo apt install python3-picamera2
+  599  sudo kill -KILL 2675
+  600  sudo apt install pyth
+  601  sudo kill -KILL 3204
+  602  sudo apt install python3-picamera2
+  603  libcamera-hello
+  604  cd hydro-app
+  605  python main.py 
+  606  python main.py 
+  607  python main.py
+  608  sudo i2cdetect -y 1
+  609  sudo i2cget -y 1 0x77
+  610  sudo i2cget -y 1 0x77 0xf8
+  611  sudo i2cget -y 1 0xf8
+  612  sudo i2cget -y 1 0x77 0xf8
+  613  sudo i2cget -y 1 0x77
+  614  sudo i2cdetect -y 1
+  615  pip install smbus2
+  616  sudo aput install smbus2
+  617  sudo apt install smbus2
+  618  sudo apt install python3-smbus2 -y
+  619  python main.py
+  620  sudo i2cdetect -y 1
+  621  python main.py
+  622  sudo i2cdetect -y 1
+  623  python main.py
+  624  /usr/bin/python /home/vlastimil-palfi/.vscode-server/extensions/ms-python.python-2025.0.0/python_files/printEnvVariablesToFile.py /home/vlastimil-palfi/.vscode-server/extensions/ms-python.python-2025.0.0/python_files/deactivate/bash/envVars.txt
+  625  /bin/python /home/vlastimil-palfi/.vscode-server/extensions/ms-python.python-2025.0.0/python_files/printEnvVariablesToFile.py /home/vlastimil-palfi/.vscode-server/extensions/ms-python.python-2025.0.0/python_files/deactivate/bash/envVars.txt
+  626  /usr/bin/python /home/vlastimil-palfi/.vscode-server/extensions/ms-python.python-2025.0.0/python_files/printEnvVariablesToFile.py /home/vlastimil-palfi/.vscode-server/extensions/ms-python.python-2025.0.0/python_files/deactivate/bash/envVars.txt
+  627  python main.py
+  628  git --version
+  629  git config --global user.name "PalfiVlastimil"
+  630  git config --global user.email "vlastimil.palfi92@gmail.com"
+  631  git remote add origin https://github.com/PalfiVlastimil/BP-hydro-app-2025.git
+  632  git push origin main
+  633  sudo i2cdetect -y 1
+  634  lsmod | grep ads
+  635  sudo nano /etc/modprobe.d/blacklist.conf
+  636  sudo nano /etc/modprobe.d/blacklist.conf
+  637  sudo reboot
+  638  sudo i2cdetect -y 1
+  639  sudo rmmod ads1015
+  640  sudo rmmod ads1115
+  641  sudo i2cdetect -y 1
+  642  sudo i2cget -y 1 0xUU
+  643  sudo i2cget -y 1 0x48
+  644  sudo nano /etc/modprobe.d/blacklist.conf
+  645  sudo nano /etc/modprobe.d/blacklist.conf
+  646  sudo reboot
+  647  sudo i2cget -y 1
+  648  sudo i2cdetect -y 1
+  649  sudo i2cdetect -y 3
+  650  sudo i2cdetect -y 2
+  651  sudo i2cdetect -y 1
+  652  sudo i2cdetect -y 2
+  653  reboot
+  654  sudo reboot
+  655  sudo i2cdetect -y 1
+  656  systemctl | grep failed
+  657  sudo nano /boot/firmware/config.txt
+  658  sudo i2cdetect -y 2
+  659  reboot
+  660  sudo reboot
+  661  sudo i2cdetect -y 3
+  662  dmesg | grep i2c
+  663  sudo nano /boot/firmware/config.txt
+  664  sudo reboot
+  665  sudo i2cdetect -y 3
+  666  sudo i2cdetect -y 1
+  667  sudo i2cdetect -y 3
+  668  sudo i2cdetect -y 4
+  669  sudo i2cdetect -y 5
+  670  sudo i2cdetect -L
+  671  sudo i2cdetect -l
+  672  sudo i2cdetect -y 0
+  673  sudo i2cdetect -y 1
+  674  sudo i2cdetect -y 10
+  675  sudo i2cdetect -y 20
+  676  sudo i2cdetect -y 21
+  677  sudo i2cdetect -y 22
+  678  sudo i2cdetect -y 10
+  679  sudo i2cdetect -y 22
+  680  sudo i2cdetect -y 21
+  681  sudo i2cdetect -y 20
+  682  sudo i2cdetect -y 10
+  683  sudo i2cdetect -y 1
+  684  sudo i2cdetect -y 0
+  685  sudo i2cdetect -y 1
+  686  sudo i2cdetect -y 2
+  687  sudo i2cdetect -y 22
+  688  sudo i2cdetect -y 21
+  689  sudo i2cdetect -y 22
+  690  lsmod | grep ads
+  691  sudo i2cdetect -y 1
+  692  sudo i2cdetect -y 2
+  693  3
+  694  sudo i2cdetect -y 3
+  695  sudo i2cdetect -y 4
+  696  sudo i2cdetect -y 5
+  697  sudo i2cdetect -y 6
+  698  sudo i2cdetect -y 7
+  699  ls /dev/ | grep i2c
+  700  sudo nano /boot/firmware/config.txt 
+  701  sudo openconnect --user=vlastimil.palfi --authgroup=TUL  vpn.tul.cz
+  702  exit
+  703  sudo openconnect --user=vlastimil.palfi --authgroup=TUL_only  vpn.tul.cz
+  704  sudo openconnect --user=vlastimil.palfi --authgroup=TUL(only)  vpn.tul.cz
+  705  sudo openconnect --user=vlastimil.palfi --authgroup=TUL  vpn.tul.cz
+  706  sudo openconnect --user=vlastimil.palfi --authgroup=TUL_only  vpn.tul.cz
+  707  sudo openconnect --user=vlastimil.palfi vpn.tul.cz
+  708  sudo update
+  709  sudo openconnect --user=vlastimil.palfi vpn.tul.cz
+  710  sudo openconnect --user=vlastimil.palfi --authgroup=TUL_only  vpn.tul.cz
+  711  sudo apt install ufw
+  712  sudo nano /etc/default/ufw
+  713  sudo ufw default deny incoming
+  714  sudo ufw default allow outgoing
+  715  sudo ufw allow ssh
+  716  sudo ufw allow 22
+  717  sudo ufw 
+  718  sudo ufw status
+  719  sudo ufw enable
+  720  sudo ufw allow http
+  721  sudo ufw allow https
+  722  sudo ufw allow 80
+  723  sudo ufw status
+  724  sudo ufw allow 6000:6007/tcp
+  725  sudo ufw allow 6000:6007/udp
+  726  cat /etc/resolv.conf
+  727  sudo ufw status
+  728  cat /etc/resolv.conf
+  729  ip a
+  730  sudo nano /etc/ssh/sshd_config
+  731  sudo systemctl restart ssh
+  732  cat /etc/resolv.conf
+  733  ip a
+  734  ip -a
+  735  ip a
+  736  cat /etc/resolv.conf
+  737  pip install Flask
+  738  cd flask-api/
+  739  python -m venv
+  740  python -m venv .venv
+  741  source .venv/bin/activatesource .venv/bin/activatesource .venv/bin/activatesource .venv/bin/activat
+  742  source .venv/bin/activate
+  743  deactivate
+  744  source ./venv/bin/activate
+  745  python -m venv ./venv
+  746  source ./venv/bin/activate
+  747  pip install flask
+  748  python api_server.py
+  749  sudo openconnect --user=vlastimil.palfi
+  750  sudo openconnect --user=vlastimil.palfi --authgroup=TUL
+  751  sudo openconnect --user=vlastimil.palfi --authgroup=TUL vpn.tul.cz
+  752  sudo openconnect --user=vlastimil.palfi --authgroup=TUL --passwd-on-stdin vpn.tul.cz
+  753  sudo openconnect --user=vlastimil.palfi --authgroup=TUL  vpn.tul.cz
+  754  sudo openconnect --authgroup=TUL  vpn.tul.cz
+  755  sudo openconnect --user=vlastimil.palfi --authgroup=TUL  vpn.tul.cz
+  756  sudo openconnect --user=vlastimil.palfi --authgroup=TUL_only  vpn.tul.cz
+  757  sudo update
+  758  sudo apt update
+  759  sudo openconnect --user=vlastimil.palfi --authgroup=TUL_only  vpn.tul.cz
+  760  sudo openconnect --user=vlastimil.palfi@tul.cz --authgroup=TUL_only  vpn.tul.cz
+  761  grep sshd.\*Failed /var/log/auth.log | less
+  762  utmpdump /var/log/btmp
+  763  sudo utmpdump /var/log/btmp
+  764  sudo utmpdump /var/log/wtmp 
+  765  openconnect --user=vlastimil.palfi@tul.cz --authgroup=TUL_only vpn.tul.cz
+  766  sudo openconnect --user=vlastimil.palfi@tul.cz --authgroup=TUL_only vpn.tul.cz
+  767  sudo i2cget -y 1 0x08
+  768  sudo i2cdetect -y 1
+  769  sudo i2cdetect -y 0
+  770  sudo i2cdetect -y 2
+  771  sudo i2cdetect -y 10
+  772  python main.py 
+  773  ls /sys/bus/w1/devices
+  774  ls -la /sys/bus/w1/devices
+  775  ls -la /sys/bus/w1
+  776  ls -la /sys/bus/w1/Devi
+  777  ls -la /sys/bus/w1/devices/
+  778  reboot
+  779  sudo reboot
+  780  ls -la /sys/bus/w1/devices/
+  781  sudo reboot 
+  782  ls -la /sys/bus/w1/devices/
+  783  sudo reboot 
+  784  ls -la /sys/bus/w1/devices/
+  785  python main.py 
+  786  ls -la /sys/bus/w1/devices/
+  787  sudo reboot 
+  788  ls -la /sys/bus/w1/devices/
+  789  ls -la /sys/bus/
+  790  ls -la /sys/bus/w1
+  791  ls -la /sys/bus/w1/drivers
+  792  ls -la /sys/bus/w1/drivers/w1_slave_driver/
+  793  sudo nano /boot/firmware/config.txt 
+  794  sudo modprobe w1-gpio
+  795  sudo modprobe w1-therm
+  796  cd sys/bus/w1/devices
+  797  cd /sys/bus/w1/devices
+  798  ls
+  799  sudo reboot
+  800  ls sys/bus/w1/devices/
+  801  ls /sys/bus/w1/devices
+  802  ls /sys/bus/w1/devices/
+  803  ls -la /sys/bus/w1/devices/
+  804  sudo modprobe w1-gpio
+  805  sudo modprobe w1-therm
+  806  ls -la /sys/bus/w1/devices/
+  807  sudo nano /boot/config.txt
+  808  sudo nano /boot/firmware/config.txt
+  809  reboot
+  810  sudo reboot
+  811  ls -la /sys/bus/w1/devices/
+  812  sudo nano /boot/firmware/config.txt
+  813  ls -la /sys/bus/w1/
+  814  ls -la /sys/bus/w1/devices
+  815  sudo reboot
+  816  ls -la /sys/bus/w1/devices
+  817  ls -la /sys/bus/w1/devices/00-800000000000
+  818  cd /sys/bus/w1/devices/00-800000000000
+  819  ls
+  820  sudo nano /boot/firmware/config.txt
+  821  sudo reboot
+  822  ls /sys/bus/w1/devices/
+  823  python main.py 
+  824  sudo reboot
+  825  ip a
+  826  systemctl status vncserver-x11-serviced
+  827  sudo systemctl restart vncserver-x11-serviced
+  828  systemctl status vncserver-x11-serviced
+  829  sudo netstat -tlnp | grep 5900
+  830  sudo ss -tlnp | grep 5900
+  831  sudo kill -9 16
+  832  sudo ss -tlnp | grep 5900
+  833  sudo kill -9 0
+  834  sudo ss -tlnp | grep 5900
+  835  sudo systemctl restart vncserver-x11-serviced
+  836  systemctl status vncserver-x11-serviced
+  837  sudo kill -9 <PID>
+  838  sudo ss -tlnp | grep 5900
+  839  ps
+  840  sudo ss -tlnp | grep 5900
+  841  sudo kill -9 3363
+  842  sudo ss -tlnp | grep 5
+  843  sudo kill -9 5664
+  844  sudo systemctl restart vncserver-x11-serviced
+  845  systemctl status vncserver-x11-serviced
+  846  sudo systemctl restart vncserver-x11-serviced
+  847  systemctl status vncserver-x11-serviced
+  848  sudo systemctl restart lightdm
+  849  systemctl status vncserver-x11-serviced
+  850  sudo ss -tlnp | grep 5900
+  851  sudo systemctl restart lightdm
+  852  sudo raspi-config
+  853  sudo apt install rpi-connect
+  854  sudo apt install rpi-connect-lite
+  855  rpi-connect on
+  856  rpi-connect signin
+  857  rpi-connect on
+  858  rpi-connect vnc on
+  859  systemctl status vncserver-x11-service
+  860  sudo ss -tlnp
+  861  systemctl status vncserver-x11-serviced
+  862  systemctl restart vncserver-x11-serviced
+  863  sudo systemctl restart vncserver-x11-serviced
+  864  sudo ss -tlnp | grep 5900
+  865  sudo systemctl restart wayvnc
+  866  apt install wayvnc
+  867  sudo apt install wayvnc
+  868  sudo systemctl restart wayvnc
+  869  sudo systemctl status wayvnc
+  870  sudo systemctl restart wayvnc
+  871  sudo systemctl status wayvnc
+  872  sudo systemctl restart wayvnc
+  873  rpi-connect vnc on
+  874  sudo apt uninstall rpi-connect 
+  875  sudo apt remove rpi-connect 
+  876  sudo apt install rpi-connect 
+  877  rpi-connect on
+  878  rpi-connect vnc on
+  879  sudo ss -tlnp 
+  880  cat .xsession-errors
+  881  sudo update
+  882  sudo apt update
+  883* sudo apt install -y mong
+  884  sudo apt install mongodb
+  885  wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+  886  sudo mkdir -p /etc/apt/keyrings/
+  887  sudo apt-get install gnupg curl
+  888  curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc |    sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg    --dearmor
+  889  sudo mkdir -p /etc/apt/sources.list.d/mongodb-org-8.0.list
+  890  echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+  891  sudo apt-get update
+  892  sudo apt-get install -y mongodb-org
+  893  sudo apt-key list
+  894  sudo apt-key list | grep -A 1 "MongoDB"
+  895  sudo apt-key del 6564 08E3 90CF B1F5
+  896  sudo apt-key del 2069 1EEC 3521 6C63 CAF6  6CE1 6564 08E3 90CF B1F5
+  897  sudo apt-key del 656408E390CFB1F5
+  898  sudo apt-key list | grep -A 1 "MongoDB"
+  899  curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc |    sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg    --dearmor
+  900  sudo apt-key list
+  901  curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc |    sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg    --dearmor
+  902  echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+  903  sudo apt-get update
+  904  sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys DC6121574A3BF8AC
+  905  sudo apt update
+  906  sudo apt-get install -y mongodb-org
+  907  sudo apt-get install -y mongodb
+  908  echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+  909  sudo apt-get install -y mongodb-org
+  910  curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg --dearmor
+  911  cat /etc/lsb-release
+  912  cat /etc/os-release
+  913  sudo mkdir -p /etc/apt/keyrings/
+  914  curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | gpg --dearmor | sudo tee /etc/apt/keyrings/mongodb-server-8.0.gpg > /dev/null
+  915  ls /etc/apt/keyrings/
+  916  mongodb-server-8.0.gpg
+  917  echo "deb [ arch=amd64,arm64 signed-by=/etc/apt/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+  918  ls /etc/apt/
+  919  sudo apt-get update
+  920  sudo apt-get install -y mongodb-org
+  921  sudo apt-get update
+  922  apt search mongodb-org
+  923* all -y mongodb-org=8.0.4
+  924  apt search mongodb-org-server
+  925  sudo apt-get install mongodb-org-server
+  926  cat /etc/os-release
+  927  uname -a
+  928  ID=raspbian
+  929  getconf LONG_BIT
+  930  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  931  sudo apt-get update
+  932  sudo apt-get install ca-certificates curl
+  933  ls -la ls /etc/apt
+  934  ls -la /etc/apt
+  935  sudo curl -fsSL https://download.docker.com/linux/raspbian/gpg -o /etc/apt/keyrings/docker.asc
+  936  sudo chmod a+r /etc/apt/keyrings/docker.asc
+  937  drwxr-xr-x   2 root root  4096 May 25  2023 auth.conf.d
+  938  echo   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/raspbian \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" |   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  939  sudo apt-get update
+  940  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  941  sudo docker run hello-world
+  942  docker pull mongodb/mongodb-community-server:latest
+  943  sudo docker pull mongodb/mongodb-community-server:latest
+  944  docker pull mongodb/mongodb-community-server:latest
+  945  uname
+  946  /proc/cpuinfo
+  947  sudo /proc/cpuinfo
+  948  sudo cat /proc/cpuinfo
+  949  grep -o -w 'lm' /proc/cpuinfo
+  950  sudo grep -o -w 'lm' /proc/cpuinfo
+  951  docker --version
+  952  docker pull mongodb/mongodb-community-server:latest
+  953  sudo docker pull mongodb/mongodb-community-server:latest
+  954  docker pull arm64v8/mongo
+  955  sudo docker pull arm64v8/mongo
+  956  grep -o -w 'lm' /proc/cpuinfo
+  957  cat /proc/cpuinfo
+  958  lscpu | grep Architecture
+  959  uname -
+  960  uname -r
+  961  cat /etc/os-release
+  962  dpkg –print architecture
+  963  cat /etc/os-release
+  964  uname -m
+  965  dpkg --print-architecture
+  966  sudo apt install dpkg
+  967  dpkg -l
+  968  dpkg --get-selections | grep -v deinstall
+  969  apt-mark showmanual
+  970  apt-mark showmanual > ~/instalations.txt
+  971  ls
+  972  ls -l ..
+  973  sudo nano ~/instalations.txt 
+  974  ufw status
+  975  sudo ufw status
+  976  cat /boot/firmware/config.txt 
+  977  cat /boot/firmware/config.txt > ../config_b.txt
+  978  ls --/
+  979  ls ../
+  980  rm -r ../micropython/
+  981  ls ../
+  982  rmdir -r ../micropython/
+  983  rm -r ../micropython/
+  984  sudo rm -r ../micropython/
+  985  ls ../
+  986  ls ../hydro
+  987  ls ../hydroponics/
+  988  ls ../Desktop/
+  989  ls -l ../
+  990  ls -l ../../
+  991  ls -l --block-size=M ../../ 
+  992  ls -l --block-size=G ../../ 
+  993  ls -lh ../../ 
+  994  ls -lh /
+  995  ls -l --block-size=G /
+  996  ls -lh /
+  997  du
+  998  du ../../vlastimil-palfi
+  999  du -sh ../../vlastimil-palfi 
+ 1000  history
+ 1001  history > history_b.txt

@@ -17,17 +17,15 @@ class GroveTDS:
             return tdsValue
         else:
             return 0
-    def loop_sensor(self, start):
+    def loop_sensor(self):
         print('Detecting TDS...')
-        while start == True:
+        while True:
             try:
                 print('TDS Value: {0}'.format(self.tds))
                 time.sleep(1)
             except KeyboardInterrupt:
                 break
 
-    def print_sensor_data(self):
-        print('TDS Value: {0}'.format(self.tds))
+    def read_tds_data(self):
+        return self.tds
     
-
-#Grove = GroveTDS #-> zajímavý…

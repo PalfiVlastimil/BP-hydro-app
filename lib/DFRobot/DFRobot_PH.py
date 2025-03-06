@@ -34,11 +34,11 @@ class DFRobot_PH():
 			sys.exit(1)
 	def read_PH(self,voltage,temperature):
 		'''!
-          @brief   Convert voltage to PH with temperature compensation.
+      @brief   Convert voltage to PH with temperature compensation.
 		  @note voltage to pH value, with temperature compensation
-          @param voltage       Voltage value
+      @param voltage       Voltage value
 		  @param temperature   Ambient temperature
-          @return  The PH value
+      @return  The PH value
         '''
 		global _acidVoltage
 		global _neutralVoltage

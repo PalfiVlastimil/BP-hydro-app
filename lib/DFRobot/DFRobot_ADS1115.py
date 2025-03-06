@@ -12,7 +12,7 @@ import smbus
 import time
 
 # Get I2C bus
-bus = smbus.SMBus(1)
+bus = smbus.SMBus(0)
 
 # I2C address of the device
 ADS1115_IIC_ADDRESS0				= 0x48

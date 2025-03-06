@@ -1,0 +1,3 @@
+[submodule "lib/grove"]
+	path = lib/grove
+	url = https://github.com/Seeed-Studio/grove.py.git
