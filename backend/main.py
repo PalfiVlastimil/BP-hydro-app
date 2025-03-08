@@ -1,7 +1,7 @@
 import time
-import sys
 import os
 import traceback
+import sys
 sys.path.append('sensors/grove')
 sys.path.append('sensors/other')
 
@@ -24,7 +24,7 @@ GROVE_GPIO_12_PIN    = 12
 GROVE_GPIO_26_PIN    = 26
 GROVE_I2C_GPIO_0_PIN = 0
 GROVE_I2C_GPIO_1_PIN = 1
-
+picam2 = Picamera2()
 app_is_running = True
 picam2 = Picamera2()
 
@@ -41,8 +41,8 @@ def switch_menu(number):
     servo = GroveServo(GROVE_GPIO_26_PIN)
     servo.sweep(True)
   elif number == 3:
-    water_level = GroveWaterLevelSensor(GROVE_I2C_GPIO_1_PIN)
-    water_level.loop_sensor(True)
+    water_level_sensor = GroveWaterLevelSensor(GROVE_I2C_GPIO_1_PIN)
+    water_level_sensor.loop_sensor(True)
   elif number == 4:
     sensor = GroveTDS(GROVE_ADC_IN_0)
     sensor.loop_sensor(True)

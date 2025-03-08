@@ -8,7 +8,6 @@ class DHT22:
 
     def loop_sensor(self):
         #for DHT11/DHT22
-        #for DHT10
         while True:
             try:
                 humi, temp = self.sensor.read()
@@ -21,7 +20,11 @@ class DHT22:
                 break
     def read_dht_data(self):
         humi, temp = self.sensor.read()
-        if humi is not None:
+        try:
+            if humi is None and temp is None: return None, None
+            if humi is None: return humi, None
+            if temp is None: return None, temp
             return humi, temp
-        else:
-            return temp
+        except Exception as e:
+            print(f"Error reading from sensor: {e}")
+            return None

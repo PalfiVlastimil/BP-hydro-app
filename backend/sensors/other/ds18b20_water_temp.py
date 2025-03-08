@@ -28,8 +28,16 @@ def loop(ds18b20):
             #kill()
             break
 
-def print_sensor_data(ds18b20):
-    print("Current temperature : %0.3f C" % read_sensor_data(ds18b20))
+def read_celsius_data():
+    try:
+        serialNum = get_sensor();
+        celsius = read_sensor_data(serialNum)
+        if serialNum is None: return None
+        if celsius is None: return None
+        return celsius;
+    except Exception as e:
+        print(f"Error reading from sensor: {e}")
+        return None  
 
 def kill():
     quit()

@@ -64,3 +64,12 @@ class GroveWaterLevelSensor:
                 time.sleep(1)
             except KeyboardInterrupt:
                 break
+    def read_water_level_percentage(self):
+        level_percent = self.read_percentage()
+        try:
+            if level_percent is None:
+                return None
+            return level_percent
+        except Exception as e:
+            print(f"Error reading from sensor: {e}")
+            return None       

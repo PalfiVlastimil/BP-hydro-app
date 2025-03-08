@@ -84,8 +84,6 @@ def loop_sensor():
         print(round(secondes/60,4), '(min) total')
         print('-------------------------------------')
 
-        
-
     except KeyboardInterrupt:
         print('\n CTRL+C - Exiting')
         GPIO.cleanup()
