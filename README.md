@@ -1,9 +1,16 @@
 # Hydroponics sensors app
 
-- Start virtual environment:
+- Start virtual environment for testing locally without Docker:
 ```shell
-
-
+cd backend/lib/grove.py/
+virtualenv -p python3 backend/venv --system-site-packages #for grove.py
+pip install grove.py
+source backend/venv/bin/activate
+deactivate
+```
+Testing script:
+```shell
+python backend/main.py
 ```
 
 Other useful commands to recognize circuits
@@ -19,5 +26,6 @@ sudo nmtui
 - Be sure to run Docker Desktop and Docker Compose
 - build with .env file:
 ```bash
-docker-compose --env-file .env up --build
+docker-compose --env-file config.env up --build #for Windows docker engine
+docker compose --env-file config.env up --build #for Linux docker engine
 ```

@@ -4,6 +4,15 @@ services:
 
   backend:
     container_name: hydro-backend
+    privileged: true
+    devices:
+      - "/dev/gpiomem:/dev/gpiomem"  # For Raspberry Pi GPIO
+      - "/dev/i2c-1:/dev/i2c-1"      # For I2C devices
+      - "/dev/mem:/dev/mem"          # For direct memory access
+      - "/dev/video0:/dev/video0"
+    volumes:
+      # your existing volumes...
+      - "/sys:/sys"                  # For sysfs access
     build: 
       context: ./backend
       dockerfile: Dockerfile
@@ -31,7 +40,7 @@ services:
 
   mongo-db:
     container_name: hydro-mongo
-    image: mongo:latest
+    image: mongo:4.4.18
     restart: always
     command: ["mongod", "--quiet", "--logpath", "/dev/null"]
     environment:
@@ -43,7 +52,7 @@ services:
     networks:
       - internal-network
     healthcheck:  
-      test: ["CMD", "mongosh", "--eval", "db.runCommand('ping').ok"]
+      test: ["CMD", "mongo", "--eval", "db.runCommand('ping').ok"]
       interval: 10s
       retries: 5
       start_period: 30s

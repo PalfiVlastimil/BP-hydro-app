@@ -1,5 +1,6 @@
 import sys
-sys.path.append('lib/DFRobot')
+import traceback
+sys.path.append('backend/lib/DFRobot')
 import time
 ADS1115_REG_CONFIG_PGA_6_144V        = 0x00 # 6.144V range = Gain 2/3
 ADS1115_REG_CONFIG_PGA_4_096V        = 0x02 # 4.096V range = Gain 1
@@ -14,6 +15,7 @@ from DFRobot_PH      import DFRobot_PH
 ads1115 = ADS1115()
 ph      = DFRobot_PH()
 
+
 def print_sensor_data(ambient_temperature, analog_pin):
   #set IIC address
   ads1115.setAddr_ADS1115(0x48)
@@ -26,10 +28,13 @@ def print_sensor_data(ambient_temperature, analog_pin):
   ph.reset()
 
 def read_PH_data(ambient_temperature, analog_pin):
-  try:  
-    #set IIC address
+  try:
+    
+    # Set IIC address
     ads1115.setAddr_ADS1115(0x48)
-    #Get the Digital Value of Analog of selected channel
+    # Calibrate the voltage before reding it 
+    ads1115.setGain(ADS1115_REG_CONFIG_PGA_1_024V)
+    # Get the Digital Value of Analog of selected channel
     adc0 = ads1115.readVoltage(analog_pin) #0
     print("A0:%dmV "%(adc0['r']))
     #Calibrate the calibration data
@@ -39,5 +44,6 @@ def read_PH_data(ambient_temperature, analog_pin):
     return PH
   except Exception as e:
     print(f"Error reading from sensor: {e}")
+    print(traceback.format_exc())
     return None
     

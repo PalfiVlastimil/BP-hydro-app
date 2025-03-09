@@ -34,7 +34,7 @@ THE SOFTWARE.
 from __future__ import print_function
 import RPi.GPIO as IO
 import time
-import numpy
+#import numpy
 from grove.helper import SlotHelper
 
 IO.setwarnings(False)

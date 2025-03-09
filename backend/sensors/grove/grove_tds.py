@@ -27,5 +27,6 @@ class GroveTDS:
                 break
 
     def read_tds_data(self):
+        print('Detecting TDS...')
         return self.tds
     

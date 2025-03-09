@@ -5,7 +5,7 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Install dependencies
-RUN python -m venv venv
+RUN python -m venv venv 
 
 # Activate virtual environment and set the PATH
 ENV PATH="/app/venv/bin:$PATH"

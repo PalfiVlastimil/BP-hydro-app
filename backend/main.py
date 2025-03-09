@@ -2,8 +2,8 @@ import time
 import os
 import traceback
 import sys
-sys.path.append('sensors/grove')
-sys.path.append('sensors/other')
+sys.path.append('backend/sensors/grove')
+sys.path.append('backend/sensors/other')
 
 #importing classes from modules
 from grove_dht22 import DHT22
@@ -26,7 +26,6 @@ GROVE_I2C_GPIO_0_PIN = 0
 GROVE_I2C_GPIO_1_PIN = 1
 picam2 = Picamera2()
 app_is_running = True
-picam2 = Picamera2()
 
 def clear_console():
     command = 'clear'
@@ -44,14 +43,16 @@ def switch_menu(number):
     water_level_sensor = GroveWaterLevelSensor(GROVE_I2C_GPIO_1_PIN)
     water_level_sensor.loop_sensor(True)
   elif number == 4:
-    sensor = GroveTDS(GROVE_ADC_IN_0)
-    sensor.loop_sensor(True)
+    sensor = GroveTDS(0)
+    #sensor.read_tds_data()
+    sensor.loop_sensor()
   elif number == 5:
     ds18b20_water_temp.loop_sensor()
   elif number == 6:
-    ph_meter.print_sensor_data()
+    PH = ph_meter.read_PH_data(25, 0)
+    print("PH: ", PH)
   elif number == 7:
-    water_flow_meter.loop_sensor()
+    water_flow_meter.read_sensor_once()
   elif number == 8:
     global picam2
     timestr = time.strftime("%d%m%y-%H%M%S")

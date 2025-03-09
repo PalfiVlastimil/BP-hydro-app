@@ -3,7 +3,9 @@ from pymongo import MongoClient
 from flask_cors import CORS
 import os
 import sys
+import random
 sys.path.append('sensors/grove')
+
 sys.path.append('sensors/other')
 
 #This is a rest api
@@ -17,7 +19,7 @@ from grove_tds import GroveTDS
 import ds18b20_water_temp
 import ph_meter
 import water_flow_meter
-from picamera2 import Picamera2, Preview
+#from picamera2 import Picamera2, Preview Why this doesnt work????
 
 # Pins
 # Grove AD convertor pin
@@ -34,26 +36,50 @@ water_level_sensor = GroveWaterLevelSensor(GROVE_I2C_GPIO_1_PIN)
 tds_sensor = GroveTDS(GROVE_ADC_IN_0)
 
 app = Flask(__name__)
+app.config
 CORS(app)
 # Connect to MongoDB
 MONGO_URI = os.getenv("MONGO_URI", "mongodb://mongo:27017/")
 client = MongoClient(MONGO_URI)
-db = client.hello_database
-collection = db.hello_collection
+db = client.hydro_db
+collection = db.hydro_database
 
 
-@app.route('/get_data', methods=['GET'])
+@app.route('/get_dht', methods=['GET'])
 def get_data():
     # Simulate reading data from a sensor
     humi, temp = dht22_sensor.read_dht_data()
     data = {
-        "humidity": temp or round(random.uniform(40.0, 60.0), 2),
-        "temperature": humi or round(random.uniform(20.0, 30.0), 2)
+        "humidity": humi or None,
+        "temperature": temp or None
     }
     json_data = jsonify(data)
-    return jsonify(json_data)
+    return json_data
+# TODO Plan out, how should database work, and what CRUD operations will be here
+@app.route('/add_air_temp_humid', methods=['POST'])
+def add_air_temp_humid():
+    
+    pass
+@app.route('/add_dht22', methods=['POST'])
+def add_dht22():
+    
+    pass
+@app.route('/add_water_level', methods=['POST'])
+def add_water_level():
+    pass
 
+@app.route('/add_water_temp', methods=['POST'])
+def add_water_temp():
+    pass
+
+@app.route('/add_PH', methods=['POST'])
+def add_PH():
+    pass
+
+@app.route('/add_water_flow', methods=['POST'])
+def add_water_flow():
+    pass
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, )
+    app.run(host='0.0.0.0', port=5000)

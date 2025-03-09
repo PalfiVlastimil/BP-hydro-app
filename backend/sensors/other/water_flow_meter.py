@@ -92,4 +92,45 @@ def loop_sensor():
   GPIO.cleanup()
   print('Done')
 
+def read_sensor_once():
+    # configurations
+    pin_input = int(10)
+    GPIO.setup(pin_input, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+    # variables
+    total_liters = 0
+    sample_time = 1  # Read for 1 second
+    m = 0.0021  # Conversion factor (liters per pulse)
+
+    # data
+    pulse_count = 0
+
+    print("Water Flow - YF-S201 measurement")
+
+    # Count the number of pulses in the sample period
+    def pulse_callback(channel):
+        nonlocal pulse_count
+        pulse_count += 1
+
+    # Setup the callback to count pulses on the pin
+    GPIO.add_event_detect(pin_input, GPIO.RISING, callback=pulse_callback)
+
+    # Wait for the sample period (e.g., 1 second)
+    time.sleep(sample_time)
+
+    # Remove event detection to stop counting pulses
+    GPIO.remove_event_detect(pin_input)
+
+    # Calculate the flow rate in Liters per minute
+    liters_per_pulse = m
+    flow_rate_lpm = pulse_count * liters_per_pulse * 60 / sample_time  # Liters per minute
+
+    print('-------------------------------------')
+    print('Current Time:', time.asctime(time.localtime()))
+    print(f'Pulses detected: {pulse_count}')
+    print(f'Flow rate: {flow_rate_lpm:.4f} L/min')
+    print(f'Total liters: {pulse_count * liters_per_pulse:.4f} L')
+    print('-------------------------------------')
+
+    GPIO.cleanup()
 

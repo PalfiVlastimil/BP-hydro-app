@@ -21,13 +21,8 @@ def read_sensor_data(ds18b20):
 
 def loop(ds18b20):
     while True:
-        try:
             if read_sensor_data(ds18b20) != None:
                 print("Current temperature : %0.3f C" % read_sensor_data(ds18b20))
-        except KeyboardInterrupt:
-            #kill()
-            break
-
 def read_celsius_data():
     try:
         serialNum = get_sensor();
@@ -44,4 +39,8 @@ def kill():
 def loop_sensor():
     serialNum = get_sensor()
     loop(serialNum)
-    
+if __name__ == '__main__':
+    try:
+        loop_sensor()
+    except KeyboardInterrupt:
+        kill()
