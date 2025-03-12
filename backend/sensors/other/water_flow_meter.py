@@ -8,7 +8,7 @@ from datetime import datetime
 def loop_sensor():
   # configurations
   pin_input = int(10)
-  #GPIO.setmode(GPIO.BOARD)
+  #
   GPIO.setup(pin_input, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
   # variables
@@ -92,45 +92,51 @@ def loop_sensor():
   GPIO.cleanup()
   print('Done')
 
-def read_sensor_once():
-    # configurations
-    pin_input = int(10)
+def read_sensor_liters():
+    # Configurations
+    pin_input = 10  # No need for int(10), just use 10
+    sample_time = 1  # Read for 1 second
+    conversion_factor = 0.0021  # Liters per pulse
+
+    # Ensure a clean start
+    GPIO.cleanup()
+    GPIO.setmode(GPIO.BCM)  # Must be set before setup
     GPIO.setup(pin_input, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
-    # variables
-    total_liters = 0
-    sample_time = 1  # Read for 1 second
-    m = 0.0021  # Conversion factor (liters per pulse)
+    # Remove previous event detection if it exists
+    if GPIO.gpio_function(pin_input) == GPIO.IN:
+        GPIO.remove_event_detect(pin_input)
 
-    # data
     pulse_count = 0
 
     print("Water Flow - YF-S201 measurement")
 
-    # Count the number of pulses in the sample period
+    # Callback function to count pulses
     def pulse_callback(channel):
         nonlocal pulse_count
         pulse_count += 1
 
-    # Setup the callback to count pulses on the pin
-    GPIO.add_event_detect(pin_input, GPIO.RISING, callback=pulse_callback)
+    try:
+        # Setup event detection
+        GPIO.add_event_detect(pin_input, GPIO.RISING, callback=pulse_callback)
+        
+        # Wait for the sample period
+        time.sleep(sample_time)
 
-    # Wait for the sample period (e.g., 1 second)
-    time.sleep(sample_time)
+    except RuntimeError as e:
+        print(f"GPIO Error: {e}")
+    
+    finally:
+        GPIO.remove_event_detect(pin_input)  # Clean up event detection
+        GPIO.cleanup()  # Clean up GPIO settings
 
-    # Remove event detection to stop counting pulses
-    GPIO.remove_event_detect(pin_input)
-
-    # Calculate the flow rate in Liters per minute
-    liters_per_pulse = m
-    flow_rate_lpm = pulse_count * liters_per_pulse * 60 / sample_time  # Liters per minute
+    # Calculate flow rate
+    flow_rate_lpm = pulse_count * conversion_factor * 60 / sample_time
 
     print('-------------------------------------')
     print('Current Time:', time.asctime(time.localtime()))
     print(f'Pulses detected: {pulse_count}')
     print(f'Flow rate: {flow_rate_lpm:.4f} L/min')
-    print(f'Total liters: {pulse_count * liters_per_pulse:.4f} L')
+    print(f'Total liters: {pulse_count * conversion_factor:.4f} L')
     print('-------------------------------------')
-
-    GPIO.cleanup()
 

@@ -14,7 +14,7 @@ from DFRobot_PH      import DFRobot_PH
 
 ads1115 = ADS1115()
 ph      = DFRobot_PH()
-
+ads1115.setGain(ADS1115_REG_CONFIG_PGA_2_048V)
 
 def print_sensor_data(ambient_temperature, analog_pin):
   #set IIC address
@@ -33,17 +33,44 @@ def read_PH_data(ambient_temperature, analog_pin):
     # Set IIC address
     ads1115.setAddr_ADS1115(0x48)
     # Calibrate the voltage before reding it 
-    ads1115.setGain(ADS1115_REG_CONFIG_PGA_1_024V)
+    ph.reset()
     # Get the Digital Value of Analog of selected channel
     adc0 = ads1115.readVoltage(analog_pin) #0
     print("A0:%dmV "%(adc0['r']))
     #Calibrate the calibration data
     ph.calibration(adc0['r'])
     PH = ph.read_PH(adc0['r'], ambient_temperature)
-    ph.reset()
     return PH
   except Exception as e:
     print(f"Error reading from sensor: {e}")
     print(traceback.format_exc())
     return None
-    
+def loop_PH_data(ambient_temperature, analog_pin):
+  try:
+    # Set IIC address
+    ads1115.setAddr_ADS1115(0x48)
+    while True:
+      ads1115.setGain(ADS1115_REG_CONFIG_PGA_2_048V)
+      ph.reset()
+      # Get the Digital Value of Analog of selected channel
+      adc0 = ads1115.readVoltage(analog_pin) #0
+      #Calibrate the calibration data
+      ph.calibration(adc0['r'])
+      PH = ph.read_PH(adc0['r'], ambient_temperature)
+      print(PH)
+  except Exception as e:
+    print(f"Error reading from sensor: {e}")
+    print(traceback.format_exc())
+
+def loop_PH_voltage(analog_pin):
+  try:
+    # Set IIC address
+    ads1115.setAddr_ADS1115(0x48)
+    while True:
+      ph.reset()
+      # Get the Digital Value of Analog of selected channel
+      adc0 = ads1115.readVoltage(analog_pin) #0
+      print("A0:%dmV "%(adc0['r']))
+  except Exception as e:
+    print(f"Error reading from sensor: {e}")
+    print(traceback.format_exc())

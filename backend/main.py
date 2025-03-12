@@ -36,23 +36,29 @@ def clear_console():
 def switch_menu(number):
   if number == 1:
     dht22_sensor = DHT22(GROVE_GPIO_12_PIN)
+    print(dht22_sensor.read_dht_data())
   elif number == 2:
     servo = GroveServo(GROVE_GPIO_26_PIN)
     servo.sweep(True)
   elif number == 3:
     water_level_sensor = GroveWaterLevelSensor(GROVE_I2C_GPIO_1_PIN)
-    water_level_sensor.loop_sensor(True)
+    print(water_level_sensor.read_water_level_percentage())
+    #water_level_sensor.loop_sensor(True)
   elif number == 4:
-    sensor = GroveTDS(0)
-    #sensor.read_tds_data()
-    sensor.loop_sensor()
+    sensor = GroveTDS(GROVE_I2C_GPIO_0_PIN)
+    print(sensor.read_tds_data())
+    #sensor.loop_sensor()
   elif number == 5:
-    ds18b20_water_temp.loop_sensor()
+    #ds18b20_water_temp.loop_sensor()
+    print(ds18b20_water_temp.read_celsius_data())
   elif number == 6:
-    PH = ph_meter.read_PH_data(25, 0)
-    print("PH: ", PH)
+    #PH = ph_meter.read_PH_data(22, 0)
+    #ph_meter.loop_PH_data(22, 0)
+    ph_meter.loop_PH_voltage(0)
+    #print("PH: ", PH)
   elif number == 7:
-    water_flow_meter.read_sensor_once()
+    #water_flow_meter.loop_sensor()
+    water_flow_meter.read_sensor_liters()
   elif number == 8:
     global picam2
     timestr = time.strftime("%d%m%y-%H%M%S")
