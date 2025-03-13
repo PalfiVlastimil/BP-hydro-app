@@ -53,7 +53,7 @@ def switch_menu(number):
     print(ds18b20_water_temp.read_celsius_data())
   elif number == 6:
     #PH = ph_meter.read_PH_data(22, 0)
-    #ph_meter.loop_PH_data(22, 0)
+    ph_meter.loop_PH_data(22, 0)
     ph_meter.loop_PH_voltage(0)
     #print("PH: ", PH)
   elif number == 7:

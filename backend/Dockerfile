@@ -7,8 +7,6 @@ WORKDIR /app
 # Install dependencies
 RUN python -m venv venv --system-site-packages
 
-# Activate virtual environment and set the PATH
-ENV PATH="/app/venv/bin:$PATH"
 
 # Install system dependencies and security updates
 RUN apt-get update && apt-get install -y \
@@ -21,10 +19,8 @@ COPY requirements.txt .
 
 # Install dependencies in the virtual environment
 #--no-cache-dir
-RUN pip install --no-cache-dir -r requirements.txt
-
+RUN pip3 install --no-cache-dir -r requirements.txt
 # Use curl to download the installation script and run it (for example, for grove.py)
-RUN pip install grove.py
 # Copy the application code
 COPY . .
 

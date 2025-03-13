@@ -132,11 +132,11 @@ def read_sensor_liters():
 
     # Calculate flow rate
     flow_rate_lpm = pulse_count * conversion_factor * 60 / sample_time
-
-    print('-------------------------------------')
-    print('Current Time:', time.asctime(time.localtime()))
-    print(f'Pulses detected: {pulse_count}')
-    print(f'Flow rate: {flow_rate_lpm:.4f} L/min')
-    print(f'Total liters: {pulse_count * conversion_factor:.4f} L')
-    print('-------------------------------------')
+    #print('-------------------------------------')
+    #print('Current Time:', time.asctime(time.localtime()))
+    #print(f'Pulses detected: {pulse_count}')
+    #print(f'Flow rate: {flow_rate_lpm:.4f} L/min')
+    #print(f'Total liters: {pulse_count * conversion_factor:.4f} L')
+    #print('-------------------------------------')
+    return flow_rate_lpm;
 
