@@ -60,8 +60,8 @@ class DFRobot_PH():
 			f=open('phdata.txt','w+')
 			f.writelines(flist)
 			f.close()
-			#print(">>>PH:7.0 Calibration completed,Please enter Ctrl+C exit calibration in 5 seconds")
-			#time.sleep(5.0)
+			print(">>>PH:7.0 Calibration completed,Please enter Ctrl+C exit calibration in 5 seconds")
+			time.sleep(5.0)
 		elif (voltage>1854 and voltage<2210):
 			print(">>>Buffer Solution:4.0")
 			f=open('phdata.txt','r+')
@@ -70,8 +70,8 @@ class DFRobot_PH():
 			f=open('phdata.txt','w+')
 			f.writelines(flist)
 			f.close()
-			#print(">>>PH:4.0 Calibration completed,Please enter Ctrl+C exit calibration in 5 seconds")
-			#time.sleep(5.0)
+			print(">>>PH:4.0 Calibration completed,Please enter Ctrl+C exit calibration in 5 seconds")
+			time.sleep(5.0)
 		else:
 			print(">>>Buffer Solution Error Try Again<<<")
 	def reset(self):

@@ -46,20 +46,31 @@ def switch_menu(number):
     #water_level_sensor.loop_sensor(True)
   elif number == 4:
     sensor = GroveTDS(GROVE_I2C_GPIO_0_PIN)
-    print(sensor.read_tds_data())
-    #sensor.loop_sensor()
+    sensor.loop_sensor()
   elif number == 5:
     #ds18b20_water_temp.loop_sensor()
     print(ds18b20_water_temp.read_celsius_data())
   elif number == 6:
-    #PH = ph_meter.read_PH_data(22, 0)
-    ph_meter.loop_PH_data(22, 0)
-    ph_meter.loop_PH_voltage(0)
+    dht22_sensor = DHT22(GROVE_GPIO_12_PIN)
+    humid, temp = dht22_sensor.read_dht_data()
+    #PH = ph_meter.read_PH_data(temp)
     #print("PH: ", PH)
   elif number == 7:
+    while True:
+      try:
+        tds_sensor = GroveTDS(GROVE_I2C_GPIO_0_PIN)
+        EC = tds_sensor.calculateEC()
+        time.sleep(2)
+        print(EC)
+      except KeyboardInterrupt:
+        break
+      except Exception as e:
+        print("Error on EC calculation: ", e)
+        break
+  elif number == 8:
     #water_flow_meter.loop_sensor()
     water_flow_meter.read_sensor_liters()
-  elif number == 8:
+  elif number == 9:
     global picam2
     timestr = time.strftime("%d%m%y-%H%M%S")
     picam2.start_and_record_video(timestr + ".mp4", duration=5)
@@ -79,9 +90,10 @@ def main():
     print("04. Grove - TDS senzor                  (Funguje)")    
     print("05. Other - Vodní senzor DS18B20        (Funguje)")    
     print("06. Other - PH metr                     (Funguje)")    
-    print("07. Other - Senzor vodního toku         (Funguje)")
-    print("08. Preview kamerky                     (Funguje)")
-    print("09. Ukončit program")
+    print("07. Other - EC výpočet                  (Funguje)")
+    print("08. Other - Senzor vodního toku         (Funguje)")
+    print("09. Preview kamerky                     (Funguje)")
+    print("10. Ukončit program")
     try:
       number_input = int(input("Vyber si z těchto možností [1-9]:"))
       switch_menu(number_input)

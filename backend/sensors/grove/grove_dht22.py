@@ -1,6 +1,6 @@
 import time
 from lib import seeed_dht
-
+import numpy as np
 class DHT22:
 
     def __init__(self, channel):
@@ -19,12 +19,28 @@ class DHT22:
             except KeyboardInterrupt:
                 break
     def read_dht_data(self):
-        humi, temp = self.sensor.read()
+        humid, temp = self.sensor.read()
         try:
-            if humi is None and temp is None: return None, None
-            if humi is None: return humi, None
+            if humid is None and temp is None: return None, None
+            if humid is None: return humid, None
             if temp is None: return None, temp
-            return humi, temp
+            return humid, temp
         except Exception as e:
             print(f"Error reading from sensor: {e}")
             return None
+    def calculate_VPD(self):
+        """
+            Calculates water pressure deficit
+            temp: air temperatur
+            humid: relative humidity
+            returns VPD in Pascal (Pa)
+        """
+        humid, temp = self.read_dht_data()
+        # firstly calculate saturation vapor pressure
+        es = 0.6108*np.exp((17.27*temp)/(temp+237.3))
+        # then actual vapor pressure
+        ea = es*(humid/100)
+        result = (es - ea)*1000 # converstion from kPa to Pa
+        return result
+
+

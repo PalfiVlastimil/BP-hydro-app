@@ -3,5 +3,8 @@ Flask==2.3.3
 flask-cors==4.0.0
 pymongo==4.6.0
 RPi.GPIO
+smbus2
 smbus
 grove.py
+numpy
+pytz

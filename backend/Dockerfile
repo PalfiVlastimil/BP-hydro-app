@@ -14,6 +14,9 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
+# install nano for file editing
+RUN apt-get update && apt-get install -y nano
+RUN apt-get update && apt-get install -y i2c-tools
 # Copy dependencies first (better caching)
 COPY requirements.txt .
 

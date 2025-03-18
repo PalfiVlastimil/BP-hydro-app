@@ -1,6 +1,8 @@
 import sys
 import traceback
 sys.path.append('backend/lib/DFRobot')
+sys.path.append('lib/DFRobot')
+
 import time
 ADS1115_REG_CONFIG_PGA_6_144V        = 0x00 # 6.144V range = Gain 2/3
 ADS1115_REG_CONFIG_PGA_4_096V        = 0x02 # 4.096V range = Gain 1
@@ -14,63 +16,60 @@ from DFRobot_PH      import DFRobot_PH
 
 ads1115 = ADS1115()
 ph      = DFRobot_PH()
-ads1115.setGain(ADS1115_REG_CONFIG_PGA_2_048V)
 
-def print_sensor_data(ambient_temperature, analog_pin):
-  #set IIC address
-  ads1115.setAddr_ADS1115(0x48)
-  #Get the Digital Value of Analog of selected channel
-  adc0 = ads1115.readVoltage(analog_pin) #0
-  print("A0:%dmV "%(adc0['r']))
-  #Calibrate the calibration data
-  ph.calibration(adc0['r'])
-  PH = ph.read_PH(adc0['r'], ambient_temperature)
-  ph.reset()
-
-def read_PH_data(ambient_temperature, analog_pin):
+def read_PH_data(water_temperature):
   try:
-    
+    calibration_value = 6.0
+    ph.reset()
+    ph.begin()
     # Set IIC address
     ads1115.setAddr_ADS1115(0x48)
-    # Calibrate the voltage before reding it 
-    ph.reset()
     # Get the Digital Value of Analog of selected channel
-    adc0 = ads1115.readVoltage(analog_pin) #0
-    print("A0:%dmV "%(adc0['r']))
+    ads1115.setGain(ADS1115_REG_CONFIG_PGA_6_144V)
+    adc0 = ads1115.readVoltage(0)
+    #print("A0:%dmV "%(adc0['r']))
     #Calibrate the calibration data
-    ph.calibration(adc0['r'])
-    PH = ph.read_PH(adc0['r'], ambient_temperature)
+    PH = ph.read_PH(adc0['r'], water_temperature)+calibration_value 
     return PH
   except Exception as e:
     print(f"Error reading from sensor: {e}")
     print(traceback.format_exc())
     return None
-def loop_PH_data(ambient_temperature, analog_pin):
+  
+"""Funkce dole slouží pro kalibraci s main.py, poté se dá využít PH metr při nasazení h"""
+def loop_PH_data(water_temperature):
   try:
-    # Set IIC address
-    ads1115.setAddr_ADS1115(0x48)
+    calibration_value = 6.0
+    ph.begin()
     while True:
-      ads1115.setGain(ADS1115_REG_CONFIG_PGA_2_048V)
-      ph.reset()
+      # Set IIC address
+      ads1115.setAddr_ADS1115(0x48)
+      #Sets the gain and input voltage range.
+      ads1115.setGain(ADS1115_REG_CONFIG_PGA_6_144V)
       # Get the Digital Value of Analog of selected channel
-      adc0 = ads1115.readVoltage(analog_pin) #0
+      adc0 = ads1115.readVoltage(0)
       #Calibrate the calibration data
-      ph.calibration(adc0['r'])
-      PH = ph.read_PH(adc0['r'], ambient_temperature)
-      print(PH)
+      PH = ph.read_PH(adc0['r'], water_temperature)+calibration_value
+      print ("Temperature:%.1f ^C PH:%.2f" %(water_temperature,PH))
+      print("A0 voltage:%dmV "%(adc0['r']))
+      time.sleep(1.0)
   except Exception as e:
     print(f"Error reading from sensor: {e}")
     print(traceback.format_exc())
 
-def loop_PH_voltage(analog_pin):
+def loop_voltage_calibration():
   try:
-    # Set IIC address
-    ads1115.setAddr_ADS1115(0x48)
+    ph.begin()
     while True:
-      ph.reset()
+      # Set IIC address
+      ads1115.setAddr_ADS1115(0x48)
       # Get the Digital Value of Analog of selected channel
-      adc0 = ads1115.readVoltage(analog_pin) #0
+      ads1115.setGain(ADS1115_REG_CONFIG_PGA_6_144V)
+      adc0 = ads1115.readVoltage(0)
       print("A0:%dmV "%(adc0['r']))
+      #Calibrate the calibration data
+      ph.calibration(adc0['r'])
+      time.sleep(1.0)
   except Exception as e:
     print(f"Error reading from sensor: {e}")
     print(traceback.format_exc())

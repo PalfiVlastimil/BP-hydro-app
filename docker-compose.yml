@@ -7,7 +7,8 @@ services:
     privileged: true
     devices:
       - "/dev/gpiomem:/dev/gpiomem"  # For Raspberry Pi GPIO
-      - "/dev/i2c-1:/dev/i2c-1"      # For I2C devices
+      - "/dev/i2c-1:/dev/i2c-1"      # For I2C devices on bus 1
+      - "/dev/i2c-0:/dev/i2c-0"      # For I2C devices on bus 0
       - "/dev/mem:/dev/mem"          # For direct memory access
       - "/dev/video0:/dev/video0"
     volumes:
@@ -50,7 +51,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${DB_User}  # Root uživatel
       MONGO_INITDB_ROOT_PASSWORD: ${DB_Password}  # Root heslo
-      MONGO_INITDB_DATABASE: test_database
+      MONGO_INITDB_DATABASE: sensor_database
     ports:
       - "50002:27017"
     networks:
