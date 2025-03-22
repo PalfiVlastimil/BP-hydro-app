@@ -7,7 +7,7 @@ from datetime import datetime
 
 def loop_sensor():
   # configurations
-  pin_input = int(10)
+  pin_input = int(8)
   #
   GPIO.setup(pin_input, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
@@ -92,51 +92,61 @@ def loop_sensor():
   GPIO.cleanup()
   print('Done')
 
-def read_sensor_liters():
-    # Configurations
-    pin_input = 10  # No need for int(10), just use 10
-    sample_time = 1  # Read for 1 second
-    conversion_factor = 0.0021  # Liters per pulse
-
-    # Ensure a clean start
-    GPIO.cleanup()
-    GPIO.setmode(GPIO.BCM)  # Must be set before setup
+def read_flow_sensor(pin_input=8, sample_rate=1):
+    """Reads water flow sensor and returns (frequency, L/min, total liters, % good samples)."""
+    
     GPIO.setup(pin_input, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
-    # Remove previous event detection if it exists
-    if GPIO.gpio_function(pin_input) == GPIO.IN:
-        GPIO.remove_event_detect(pin_input)
+    # Variables
+    time_start = time.time()
+    time_end = time_start + sample_rate
+    hz = []  
+    sample_total_time = 0
+    m = 0.0021  # Flow coefficient
 
-    pulse_count = 0
-
-    print("Water Flow - YF-S201 measurement")
-
-    # Callback function to count pulses
-    def pulse_callback(channel):
-        nonlocal pulse_count
-        pulse_count += 1
+    # Edge detection
+    current = GPIO.input(pin_input)
+    edge = current  
 
     try:
-        # Setup event detection
-        GPIO.add_event_detect(pin_input, GPIO.RISING, callback=pulse_callback)
-        
-        # Wait for the sample period
-        time.sleep(sample_time)
+        while time.time() <= time_end:
+            t = time.time()
+            v = GPIO.input(pin_input)
+            if current != v and current == edge:  # Detect rising edge
+                period = t - time_start  
+                if period > 0:  # Avoid division by zero
+                    new_hz = 1 / period
+                    hz.append(new_hz)
+                    sample_total_time += t - time_start
+                    time_start = t
 
-    except RuntimeError as e:
-        print(f"GPIO Error: {e}")
-    
+                    if DEBUG:
+                        print(round(new_hz, 4))  # Debugging output
+
+            current = v
+
+        # Processing results
+        nb_samples = len(hz)
+        if nb_samples > 0:
+            average_hz = sum(hz) / nb_samples
+            good_sample = sample_total_time / sample_rate
+            average_hz *= good_sample  # Adjusted for sample quality
+            average_liters = average_hz * m * sample_rate
+            total_liters = average_liters  # Since function runs once
+            db_good_sample = round(good_sample * 100, 4)
+            db_hz = round(average_hz, 4)
+            db_liter_by_min = round(average_liters * (60 / sample_rate), 4)
+        else:
+            db_hz = 0
+            db_liter_by_min = 0
+            total_liters = 0
+            db_good_sample = 0
+
+        return db_liter_by_min
+    except KeyboardInterrupt:
+        GPIO.cleanup()
+        return None
     finally:
-        GPIO.remove_event_detect(pin_input)  # Clean up event detection
-        GPIO.cleanup()  # Clean up GPIO settings
+        GPIO.cleanup()
 
-    # Calculate flow rate
-    flow_rate_lpm = pulse_count * conversion_factor * 60 / sample_time
-    #print('-------------------------------------')
-    #print('Current Time:', time.asctime(time.localtime()))
-    #print(f'Pulses detected: {pulse_count}')
-    #print(f'Flow rate: {flow_rate_lpm:.4f} L/min')
-    #print(f'Total liters: {pulse_count * conversion_factor:.4f} L')
-    #print('-------------------------------------')
-    return flow_rate_lpm;
 

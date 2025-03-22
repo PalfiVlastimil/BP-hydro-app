@@ -1,5 +1,5 @@
 import time
-from lib import seeed_dht
+import seeed_dht
 import numpy as np
 class DHT22:
 

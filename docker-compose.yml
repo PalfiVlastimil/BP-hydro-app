@@ -2,47 +2,6 @@ version: '3.8'
 
 services:
 
-  backend:
-    container_name: hydro-backend
-    privileged: true
-    devices:
-      - "/dev/gpiomem:/dev/gpiomem"  # For Raspberry Pi GPIO
-      - "/dev/i2c-1:/dev/i2c-1"      # For I2C devices on bus 1
-      - "/dev/i2c-0:/dev/i2c-0"      # For I2C devices on bus 0
-      - "/dev/mem:/dev/mem"          # For direct memory access
-      - "/dev/video0:/dev/video0"
-    volumes:
-      # your existing volumes...
-      - "/sys:/sys"                  # For sysfs access
-    build: 
-      context: ./backend
-      dockerfile: Dockerfile
-    ports:
-      - "5000:5000"
-    
-    environment:
-      - PORT=8001
-      - DB_User=${DB_User}
-      - DB_Password=${DB_Password}
-      - DB_Host=mongo
-      - DB_Port=27017
-    depends_on:
-      - mongo-db
-    networks:
-      - internal-network
-
-  frontend:
-    container_name: hydro-frontend
-    build: 
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "5001:5001"
-    depends_on:
-      - backend
-    networks:
-      - internal-network
-
   mongo-db:
     container_name: mongo #why does this work????
     image: mongo:4.4.18

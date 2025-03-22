@@ -1,7 +1,9 @@
 """FLASK REST API"""
-from flask import Flask, jsonify
+from flask import Flask, request, jsonify
 from pymongo import MongoClient, InsertOne
 from flask_cors import CORS
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
+from flask_bcrypt import Bcrypt
 import os
 import sys
 import random
@@ -22,7 +24,6 @@ import ds18b20_water_temp
 import ph_meter
 import water_flow_meter
 #from picamera2 import Picamera2, Preview Why this doesnt work????
-
 # Pins
 # Grove AD convertor pin
 GROVE_ADC_IN_0 = 0;
@@ -38,37 +39,64 @@ water_level_sensor = GroveWaterLevelSensor(GROVE_I2C_GPIO_1_PIN)
 tds_sensor = GroveTDS(GROVE_I2C_GPIO_0_PIN)
 
 app = Flask(__name__)
-CORS(app)
+app.config['SECRET_KEY'] = 'your_strong_secret_key'
+app.config["JWT_SECRET_KEY"] = "super_secret_key" 
+app.config['JWT_TOKEN_LOCATION'] = ['headers']
+
+bcrypt = Bcrypt(app)
+jwt = JWTManager(app)
+CORS(app, supports_credentials=True)
+users = {"admin": "password123"}
+
 #app.config
 # Connect to MongoDB
-PORT = os.environ.get("PORT")
-DB_User = os.environ.get("DB_User")
-DB_Password = os.environ.get("DB_Password")
-DB_Host = os.environ.get("DB_Host")
-DB_Port = os.environ.get("DB_Port")
-MONGO_URI = os.getenv("MONGO_URI", f"mongodb://{DB_User}:{DB_Password}@{DB_Host}:{DB_Port}/test_database?authSource=admin")
+PORT = os.environ.get("PORT") or 8081
+DB_User = os.environ.get("DB_User") or "admin"
+DB_Password = os.environ.get("DB_Password") or "password"
+DB_Host = os.environ.get("DB_Host") or "localhost"
+DB_Port = os.environ.get("DB_Port") or "50002"
+MONGO_URI = os.getenv("MONGO_URI", f"mongodb://{DB_User}:{DB_Password}@{DB_Host}:{DB_Port}/sensor_database?authSource=admin")
 
 
 client = MongoClient(MONGO_URI)
 db = client["sensor_database"]
 user_timezone = pytz.timezone("Europe/Prague")
 sensors = db["sensors"]#sensors
+user_collection = db["users"]
 
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.json
+    username = data.get("username")
+    password = data.get("password")
 
+    #users = users; # Zde bude call na login informace
+    #if users and bcrypt.check_password_hash(users.get(password), password):
+    if users.get(username) == password:
+        access_token = create_access_token(identity=username)
+        return jsonify({'message': 'Login Success', 'access_token': access_token})
+    return jsonify({'message': 'Invalid credentials'}), 401
+
+@app.route("/protected", methods=["GET"])
+@jwt_required()
+def protected():
+    current_user = get_jwt_identity()
+    return jsonify(logged_in_as=current_user)
 @app.route('/sensors/{id}', methods=['GET'])
 def get_sensor_data():
     pass
 # TODO Plan out, how should database work, and what CRUD operations will be here
 @app.route('/save_sensor_data', methods=['POST'])
+#@jwt_required()
 def add_data():
     humid, temp = dht22_sensor.read_dht_data()
-    #tds_ppm_data = tds_sensor.read_tds_data()
+    tds_ppm_data = tds_sensor.read_tds_data()
     water_lvl_percentage = water_level_sensor.read_water_level_percentage()
     water_temp = ds18b20_water_temp.read_celsius_data()
     ph_value = ph_meter.read_PH_data(water_temp)
-    ec_value = tds_sensor.calculateEC() #tds_ppm_data
+    ec_value = tds_sensor.calculateEC()
     VPD = dht22_sensor.calculate_VPD()
-    liters_per_min = water_flow_meter.read_sensor_liters()
+    liters_per_min = water_flow_meter.read_flow_sensor()
     
     print(client)
     sensor_readings = [
@@ -93,7 +121,7 @@ def add_data():
         {
             "sensor_id": "grove_tds",
             "timestamp": datetime.datetime.now(tz=pytz.utc),
-            "value": 404,
+            "value": tds_ppm_data,
             "unit": "ppm",
         },
         {
@@ -122,6 +150,7 @@ def add_data():
             "unit": "Pa",
         },
     ]
+    
     #add to database
     sensors.insert_many(sensor_readings)
     return jsonify({"message": "Data added successfully", "inserted_count": len(sensor_readings)}), 201

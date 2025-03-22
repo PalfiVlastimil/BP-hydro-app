@@ -4,6 +4,8 @@ import traceback
 import sys
 sys.path.append('backend/sensors/grove')
 sys.path.append('backend/sensors/other')
+sys.path.append('sensors/grove')
+sys.path.append('sensors/other')
 
 #importing classes from modules
 from grove_dht22 import DHT22
@@ -69,7 +71,7 @@ def switch_menu(number):
         break
   elif number == 8:
     #water_flow_meter.loop_sensor()
-    water_flow_meter.read_sensor_liters()
+    print(water_flow_meter.read_flow_sensor())
   elif number == 9:
     global picam2
     timestr = time.strftime("%d%m%y-%H%M%S")
