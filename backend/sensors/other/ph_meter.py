@@ -19,7 +19,7 @@ ph      = DFRobot_PH()
 
 def read_PH_data(water_temperature):
   try:
-    calibration_value = 6.0
+    calibration_value = 5.4
     ph.reset()
     ph.begin()
     # Set IIC address
@@ -39,7 +39,7 @@ def read_PH_data(water_temperature):
 """Funkce dole slouží pro kalibraci s main.py, poté se dá využít PH metr při nasazení h"""
 def loop_PH_data(water_temperature):
   try:
-    calibration_value = 6.0
+    calibration_value = 5.4
     ph.begin()
     while True:
       # Set IIC address

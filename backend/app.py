@@ -74,7 +74,7 @@ def login():
     #if users and bcrypt.check_password_hash(users.get(password), password):
     if users.get(username) == password:
         access_token = create_access_token(identity=username)
-        return jsonify({'message': 'Login Success', 'access_token': access_token})
+        return jsonify({'message': 'Login Success', 'access_token': access_token}), 200
     return jsonify({'message': 'Invalid credentials'}), 401
 
 @app.route("/protected", methods=["GET"])
@@ -82,76 +82,121 @@ def login():
 def protected():
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user)
-@app.route('/sensors/{id}', methods=['GET'])
-def get_sensor_data():
-    pass
-# TODO Plan out, how should database work, and what CRUD operations will be here
+
+@app.route('/get_recent_data', methods=['GET'])
+@jwt_required()
+def get_data():
+    pipeline = [
+        {
+            "$sort":  {"report.timestamp": -1}  # Sort by timestamp in descending order to get the most recent records first
+        },
+        {
+            "$group": {
+                "_id": "$sensor_id",  # Group by sensor_id
+                "sensor_id": {"$first": "$sensor_id"},  # Take the first (most recent) sensor_id
+                "report": {"$first": "$report"}
+            }
+        },
+        {
+            "$project": {
+                "_id": 0,  # Remove the _id field from the result
+                "sensor_id": 1,
+                "report": 1
+            }
+        }
+    ]
+    # Retrive from the database
+    result = list(sensors.aggregate(pipeline))
+    return jsonify(({"message": "Data retrived successfully", "sensors": result})), 200
+
+
 @app.route('/save_sensor_data', methods=['POST'])
-#@jwt_required()
+@jwt_required()
 def add_data():
     humid, temp = dht22_sensor.read_dht_data()
     tds_ppm_data = tds_sensor.read_tds_data()
     water_lvl_percentage = water_level_sensor.read_water_level_percentage()
     water_temp = ds18b20_water_temp.read_celsius_data()
     ph_value = ph_meter.read_PH_data(water_temp)
-    ec_value = tds_sensor.calculateEC()
+    ec_value = tds_sensor.calculate_EC()
     VPD = dht22_sensor.calculate_VPD()
     liters_per_min = water_flow_meter.read_flow_sensor()
-    
     print(client)
     sensor_readings = [
         {
-            "sensor_id": "ds18b20_water_temp",
-            "timestamp": datetime.datetime.now(tz=pytz.utc),
-            "value": water_temp,
-            "unit": "°C",
+            "sensor_id": "water_temp_sensor",
+            "report": {
+                "timestamp": datetime.datetime.now(tz=pytz.utc),
+                "value": water_temp,
+                "unit": "°C",
+            },
         },
         {
-            "sensor_id": "ph_meter",
-            "timestamp": datetime.datetime.now(tz=pytz.utc),
-            "value": ph_value,
-            "unit": "pH",
+            "sensor_id": "ph_sensor",
+            "report": {
+                "timestamp": datetime.datetime.now(tz=pytz.utc),
+                "value": ph_value,
+                "unit": "pH",
+            }
         },
         {
-            "sensor_id": "ec",
-            "timestamp": datetime.datetime.now(tz=pytz.utc),
-            "value": ec_value,
-            "unit": "μS/cm",
+            "sensor_id": "ec_sensor",
+            "report": {
+                "timestamp": datetime.datetime.now(tz=pytz.utc),
+                "value": ec_value,
+                "unit": "μS/cm",
+            },
         },
         {
-            "sensor_id": "grove_tds",
-            "timestamp": datetime.datetime.now(tz=pytz.utc),
-            "value": tds_ppm_data,
-            "unit": "ppm",
+            "sensor_id": "tds_sensor",
+            "report": {
+                "timestamp": datetime.datetime.now(tz=pytz.utc),
+                "value": tds_ppm_data,
+                "unit": "ppm",
+            }
         },
         {
-            "sensor_id": "grove_water-level_sensor",
-            "timestamp": datetime.datetime.now(tz=pytz.utc),
-            "value": water_lvl_percentage,
-            "unit": "%",
+            "sensor_id": "water_level_sensor",
+            "report": {
+                "timestamp": datetime.datetime.now(tz=pytz.utc),
+                "value": water_lvl_percentage,
+                "unit": "%",
+            }
         },
         {
-            "sensor_id": "water_flow_meter",
-            "timestamp": datetime.datetime.now(tz=pytz.utc),
-            "value": liters_per_min,
-            "unit": "l/min",
+            "sensor_id": "water_flow_sensor",
+            "report": {
+                "timestamp": datetime.datetime.now(tz=pytz.utc),
+                "value": liters_per_min,
+                "unit": "l/min",
+            }
         },
         {
-            "sensor_id": "DHT22_sensor",
-            "timestamp": datetime.datetime.now(tz=pytz.utc),
-            "temp": temp,
-            "humi": humid,
-            "unit": "°C, %",
+            "sensor_id": "air_temp_sensor",
+            "report":{
+                "timestamp": datetime.datetime.now(tz=pytz.utc),
+                "value": temp,
+                "unit": "°C",
+            }
         },
         {
-            "sensor_id": "water_pressure_deficit",
-            "timestamp": datetime.datetime.now(tz=pytz.utc),
-            "value": VPD,
-            "unit": "Pa",
+            "sensor_id": "humidity_sensor",
+            "report":{
+                "timestamp": datetime.datetime.now(tz=pytz.utc),
+                "value": humid,
+                "unit": "%",
+            }
+        },
+        {
+            "sensor_id": "vpd_sensor",
+            "report":{
+                "timestamp": datetime.datetime.now(tz=pytz.utc),
+                "value": VPD,
+                "unit": "Pa",
+            }
         },
     ]
-    
-    #add to database
+    #Add to database
     sensors.insert_many(sensor_readings)
     return jsonify({"message": "Data added successfully", "inserted_count": len(sensor_readings)}), 201
 

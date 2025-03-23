@@ -37,31 +37,46 @@ def clear_console():
 
 def switch_menu(number):
   if number == 1:
-    dht22_sensor = DHT22(GROVE_GPIO_12_PIN)
-    print(dht22_sensor.read_dht_data())
-  elif number == 2:
-    servo = GroveServo(GROVE_GPIO_26_PIN)
-    servo.sweep(True)
-  elif number == 3:
-    water_level_sensor = GroveWaterLevelSensor(GROVE_I2C_GPIO_1_PIN)
-    print(water_level_sensor.read_water_level_percentage())
-    #water_level_sensor.loop_sensor(True)
-  elif number == 4:
-    sensor = GroveTDS(GROVE_I2C_GPIO_0_PIN)
-    sensor.loop_sensor()
-  elif number == 5:
-    #ds18b20_water_temp.loop_sensor()
-    print(ds18b20_water_temp.read_celsius_data())
-  elif number == 6:
-    dht22_sensor = DHT22(GROVE_GPIO_12_PIN)
-    humid, temp = dht22_sensor.read_dht_data()
-    #PH = ph_meter.read_PH_data(temp)
-    #print("PH: ", PH)
-  elif number == 7:
     while True:
       try:
         tds_sensor = GroveTDS(GROVE_I2C_GPIO_0_PIN)
-        EC = tds_sensor.calculateEC()
+        dht22_sensor = DHT22(GROVE_GPIO_12_PIN)
+        humid, temp = dht22_sensor.read_dht_data()
+        PH = ph_meter.read_PH_data(temp)
+        EC = tds_sensor.calculate_EC()
+        print("PH: {:.2f}".format(PH))
+        print("EC: {:.2f}".format(EC))
+        print()
+        time.sleep(2)
+      except KeyboardInterrupt:
+        break
+    print(dht22_sensor.read_dht_data())
+  elif number == 2:
+    dht22_sensor = DHT22(GROVE_GPIO_12_PIN)
+    print(dht22_sensor.read_dht_data())
+  elif number == 3:
+    servo = GroveServo(GROVE_GPIO_26_PIN)
+    servo.sweep(True)
+  elif number == 4:
+    water_level_sensor = GroveWaterLevelSensor(GROVE_I2C_GPIO_1_PIN)
+    print(water_level_sensor.read_water_level_percentage())
+    #water_level_sensor.loop_sensor(True)
+  elif number == 5:
+    sensor = GroveTDS(GROVE_I2C_GPIO_0_PIN)
+    sensor.loop_sensor()
+  elif number == 6:
+    #ds18b20_water_temp.loop_sensor()
+    print(ds18b20_water_temp.read_celsius_data())
+  elif number == 7:
+    dht22_sensor = DHT22(GROVE_GPIO_12_PIN)
+    humid, temp = dht22_sensor.read_dht_data()
+    PH = ph_meter.read_PH_data(temp)
+    print("PH: ", PH)
+  elif number == 8:
+    while True:
+      try:
+        tds_sensor = GroveTDS(GROVE_I2C_GPIO_0_PIN)
+        EC = tds_sensor.calculate_EC()
         time.sleep(2)
         print(EC)
       except KeyboardInterrupt:
@@ -69,10 +84,10 @@ def switch_menu(number):
       except Exception as e:
         print("Error on EC calculation: ", e)
         break
-  elif number == 8:
+  elif number == 9:
     #water_flow_meter.loop_sensor()
     print(water_flow_meter.read_flow_sensor())
-  elif number == 9:
+  elif number == 10:
     global picam2
     timestr = time.strftime("%d%m%y-%H%M%S")
     picam2.start_and_record_video(timestr + ".mp4", duration=5)
@@ -85,21 +100,22 @@ def main():
   print("Vítej v testoavací aplikaci")
   #Initialize all sensors
   while app_is_running:
-    print("Vyber si senzor:")    
-    print("01. Grove - DHT22 senzor                (Funguje)")    
-    print("02. Grove - Servo                       (Funguje)")    
-    print("03. Grove - Senzor vodní hladiny        (Funguje)")    
-    print("04. Grove - TDS senzor                  (Funguje)")    
-    print("05. Other - Vodní senzor DS18B20        (Funguje)")    
-    print("06. Other - PH metr                     (Funguje)")    
-    print("07. Other - EC výpočet                  (Funguje)")
-    print("08. Other - Senzor vodního toku         (Funguje)")
-    print("09. Preview kamerky                     (Funguje)")
-    print("10. Ukončit program")
+    print("Vyber si senzor:")
+    print("01. Testování PH a EC                   (Funguje)")
+    print("02. Grove - DHT22 senzor                (Funguje)")    
+    print("03. Grove - Servo                       (Funguje)")    
+    print("04. Grove - Senzor vodní hladiny        (Funguje)")    
+    print("05. Grove - TDS senzor                  (Funguje)")    
+    print("06. Other - Vodní senzor DS18B20        (Funguje)")    
+    print("07. Other - PH metr                     (Funguje)")    
+    print("08. Other - EC výpočet                  (Funguje)")
+    print("09. Other - Senzor vodního toku         (Funguje)")
+    print("10. Preview kamerky                     (Funguje)")
+    print("11. Ukončit program")
     try:
       number_input = int(input("Vyber si z těchto možností [1-9]:"))
       switch_menu(number_input)
-      if number_input == 9:
+      if number_input == 11:
         app_is_running = False
         break
     except Exception as error:

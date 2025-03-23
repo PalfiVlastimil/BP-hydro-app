@@ -89,7 +89,7 @@ class DFRobot_PH():
 			f=open('phdata.txt','w+')
 			f.writelines(flist)
 			f.close()
-			print(">>>Reset to default parameters<<<")
+			#print(">>>Reset to default parameters<<<")
 		except:
 			f=open('phdata.txt','w')
 			#flist=f.readlines()
@@ -98,4 +98,4 @@ class DFRobot_PH():
 			#f=open('data.txt','w+')
 			f.writelines(flist)
 			f.close()
-			print(">>>Reset to default parameters<<<")
+			#print(">>>Reset to default parameters<<<")

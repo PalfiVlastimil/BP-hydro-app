@@ -30,7 +30,7 @@ class GroveTDS:
     def read_tds_data(self):
         print('Detecting TDS...')
         return self.tds
-    def calculateEC(self, k_factor_type  = 0):
+    def calculate_EC(self, k_factor_type  = 0):
         """
             calculates EC value based on TDS value
             ppm_value: value of TDS

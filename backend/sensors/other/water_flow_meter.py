@@ -4,8 +4,9 @@ DEBUG = False
 import time, sys
 import RPi.GPIO as GPIO
 from datetime import datetime
-
+GPIO.setmode(GPIO.BCM)
 def loop_sensor():
+  
   # configurations
   pin_input = int(8)
   #
@@ -93,6 +94,7 @@ def loop_sensor():
   print('Done')
 
 def read_flow_sensor(pin_input=8, sample_rate=1):
+    
     """Reads water flow sensor and returns (frequency, L/min, total liters, % good samples)."""
     
     GPIO.setup(pin_input, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)

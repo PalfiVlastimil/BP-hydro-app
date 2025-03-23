@@ -1,130 +1,114 @@
-import React, { useState, useEffect } from "react";
-import { Card, CardContent, Typography, Button, Grid } from "@mui/material"; // Import Grid here
+import React, { useState, useEffect, useRef } from "react";
+import { Card, CardContent, Typography, Button, Box } from "@mui/material"; // Import Grid here
+import Grid from '@mui/material/Grid2';
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
-import { useNavigate } from "react-router-dom";
+import { getSensorData, sendSensorData } from "../api"
+
 const Dashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const navigate = useNavigate()
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-        const response = await postLogin({ username, password });
-        console.log(response); // Log the response properly
-
-        // Since Axios automatically parses JSON, response.data contains the actual data
-        const data = response.data;
-
-        if (response.status === 200) { // Ensure response status is checked correctly
-            localStorage.setItem("token", data.access_token);
-            navigate("/dashboard"); // Redirect after login
-        } else {
-            setError("Invalid credentials");
-        }
-    } catch (error) {
-        console.error("Login failed:", error);
-        setError("Login failed. Please try again.");
+  const accessToken = localStorage.getItem("token"); //tohle bude v nějaké provideru
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [sensors, setSensors] = useState(
+    {
+      "ph_sensor": {},
+      "ec_sensor": {},
+      "water_temp_sensor": {},
+      "air_temp_sensor": {},
+      "humidity_sensor": {},
+      "water_flow_sensor": {},
+      "tds_sensor": {},
+      "vpd_sensor": {},
+      "water_level_sensor": {},
     }
-};
+
+  );
+  const sendSensorDataButton = async () => {
+    const response = await sendSensorData({ accessToken });
+    console.log(response)
+    if (response?.status == 200) {
+
+    }
+  }
+  const handleSensors = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await getSensorData({ accessToken });
+      console.log(response);
+      const data = response.data;
+
+      if (response?.status == 200) {
+
+        const sensorMapping = { ...sensors };
+
+        data.sensors.forEach((sensor, index) => {
+          if (sensorMapping[sensor.sensor_id]) {
+            Object.assign(sensorMapping[sensor.sensor_id], sensor.report);
+          }
+          else {
+            console.warn(`Sensor "${sensor.sensor_id}" not found.`);
+          }
+        });
+        console.log(sensorMapping);
+        setSensors(sensorMapping)
+        console.log(sensors)
+      }
+      else {
+        setError(response.message);
+      }
+    }
+    catch (err) {
+      setError(err.message)
+    }
+    finally {
+      setLoading(false)
+    }
+  };
+  useEffect(() => {
+    handleSensors();
+  }, [])
   const handleLogout = () => setIsAuthenticated(false);
 
   return (
-    <div style={{ padding: "24px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-        <Typography variant="h4">Sensor Dashboard</Typography>
-        <Button variant="contained" color="secondary" onClick={handleLogout}>Logout</Button>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        background: "radial-gradient(circle, rgba(16,51,152,1) 0%, rgba(17,14,59,1) 50%, rgba(13,13,56,1) 95%);", // Blue gradient
+      }}
+    >
+      <div style={{ padding: "24px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+          <Typography variant="h4">Sensor Dashboard</Typography>
+          <Button variant="contained" color="secondary" onClick={handleLogout}>Logout</Button>
+        </div>
+        <Grid container spacing={2}>
+          {Object.keys(sensors).map((sensorKey) => {
+            const sensorData = sensors[sensorKey]; // Access the sensor data by key
+            const sensorValue = sensorData.value || 0; // Example of extracting a specific property from sensor data, defaulting to 0 if not present
+            const sensorUnit = sensorData.unit || 0;
+            const sensorTime = sensorData.timestamp
+
+            return (
+              <Grid item size={{ xs: 12, md: 4, sm: 6 }} key={sensorKey}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h6">{sensorKey}</Typography>
+                    <Typography variant="h4" color="primary">{sensorValue.toFixed(2)} {sensorUnit}</Typography>
+                    <Typography variant="h7" color="primary">{sensorTime}</Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            );
+          })}
+        </Grid>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+          <Button variant="contained" color="secondary" onClick={sendSensorDataButton}>Request sensor data</Button>
+        </div>
       </div>
-      <Grid container spacing={2}>
-        {/* Card 1 */}
-        <Grid item xs={12} sm={6} md={4}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">pH Value</Typography>
-              <Typography variant="h4" color="primary">7.4</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* Card 2 */}
-        <Grid item xs={12} sm={6} md={4}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">EC Value</Typography>
-              <Typography variant="h4" color="primary">1.2</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* Card 3 */}
-        <Grid item xs={12} sm={6} md={4}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Water Temperature</Typography>
-              <Typography variant="h4" color="primary">22°C</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* Card 4 */}
-        <Grid item xs={12} sm={6} md={4}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Air Temperature</Typography>
-              <Typography variant="h4" color="primary">24°C</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* Card 5 */}
-        <Grid item xs={12} sm={6} md={4}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Humidity</Typography>
-              <Typography variant="h4" color="primary">60%</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* Card 6 */}
-        <Grid item xs={12} sm={6} md={4}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Water Flow</Typography>
-              <Typography variant="h4" color="primary">2.5 L/min</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* Card 7 */}
-        <Grid item xs={12} sm={6} md={4}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">TDS (ppm)</Typography>
-              <Typography variant="h4" color="primary">450</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* Card 8 */}
-        <Grid item xs={12} sm={6} md={4}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">VPD</Typography>
-              <Typography variant="h4" color="primary">1.2</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* Card 9 */}
-        <Grid item xs={12} sm={6} md={4}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Water Level</Typography>
-              <Typography variant="h4" color="primary">75%</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    </div>
+    </Box>
   );
 };
 
