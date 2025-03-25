@@ -30,13 +30,13 @@ class GroveTDS:
     def read_tds_data(self):
         print('Detecting TDS...')
         return self.tds
-    def calculate_EC(self, k_factor_type  = 0):
+    def calculate_EC(self, k_factor_type  = 1):
         """
             calculates EC value based on TDS value
             ppm_value: value of TDS
             k_factor_type: TDS conversion factor, a constant, which approximates EC value based on the type of water
                 - choose between [0: pure water (default), 1: groundwater, 2: seawater]
-            returns: EC value in  microsiemens per centimeter (μS/cm)
+            returns: EC value in  milisiemens per centimeter (mS/cm)
         """
         if k_factor_type > 2 or k_factor_type < 0:
             return

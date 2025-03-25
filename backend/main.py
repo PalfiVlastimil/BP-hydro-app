@@ -44,8 +44,10 @@ def switch_menu(number):
         humid, temp = dht22_sensor.read_dht_data()
         PH = ph_meter.read_PH_data(temp)
         EC = tds_sensor.calculate_EC()
+        ppm = tds_sensor.read_tds_data()
         print("PH: {:.2f}".format(PH))
         print("EC: {:.2f}".format(EC))
+        print("PPM: {:.2f}".format(ppm))
         print()
         time.sleep(2)
       except KeyboardInterrupt:
@@ -59,8 +61,8 @@ def switch_menu(number):
     servo.sweep(True)
   elif number == 4:
     water_level_sensor = GroveWaterLevelSensor(GROVE_I2C_GPIO_1_PIN)
-    print(water_level_sensor.read_water_level_percentage())
-    #water_level_sensor.loop_sensor(True)
+    #print(water_level_sensor.read_water_level_percentage())
+    water_level_sensor.loop_sensor(True)
   elif number == 5:
     sensor = GroveTDS(GROVE_I2C_GPIO_0_PIN)
     sensor.loop_sensor()
@@ -101,7 +103,7 @@ def main():
   #Initialize all sensors
   while app_is_running:
     print("Vyber si senzor:")
-    print("01. Testování PH a EC                   (Funguje)")
+    print("01. Testování PH a EC a TDS (ppm)       (Funguje)")
     print("02. Grove - DHT22 senzor                (Funguje)")    
     print("03. Grove - Servo                       (Funguje)")    
     print("04. Grove - Senzor vodní hladiny        (Funguje)")    

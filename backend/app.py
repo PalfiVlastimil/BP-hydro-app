@@ -144,7 +144,7 @@ def add_data():
             "report": {
                 "timestamp": datetime.datetime.now(tz=pytz.utc),
                 "value": ec_value,
-                "unit": "μS/cm",
+                "unit": "mS/cm",
             },
         },
         {
