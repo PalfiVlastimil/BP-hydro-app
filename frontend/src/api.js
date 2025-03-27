@@ -56,7 +56,7 @@ export const sendSensorData = async(userParams) => {
     return response;
   } catch (error) {
     // Vrátíme chybu, pokud k ní dojde
-    console.error("Error during login:", error);
+    console.error("Error during saving sensor data:", error);
     return error.response ? error.response.data : { message: 'Unknown error' };
   }
 }

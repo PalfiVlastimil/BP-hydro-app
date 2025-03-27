@@ -1,20 +1,23 @@
 """FLASK REST API"""
+import os
+import io
+import sys
+import random
+import datetime
+import pytz
+
 from flask import Flask, request, jsonify
 from pymongo import MongoClient, InsertOne
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
 from flask_bcrypt import Bcrypt
-import os
-import sys
-import random
-import datetime
-import pytz
-sys.path.append('sensors/grove')
-sys.path.append('sensors/other')
-
+import gridfs
+from PIL import Image
 
 #import all sensors
-#importing classes 
+#importing classes
+sys.path.append('sensors/grove')
+sys.path.append('sensors/other')
 from grove_dht22 import DHT22
 from grove_servo import GroveServo
 from grove_water_level_sensor import GroveWaterLevelSensor
@@ -23,7 +26,7 @@ from grove_tds import GroveTDS
 import ds18b20_water_temp
 import ph_meter
 import water_flow_meter
-#from picamera2 import Picamera2, Preview Why this doesnt work????
+from picamera2 import Picamera2, Preview
 # Pins
 # Grove AD convertor pin
 GROVE_ADC_IN_0 = 0;
@@ -43,6 +46,7 @@ app.config['SECRET_KEY'] = 'your_strong_secret_key'
 app.config["JWT_SECRET_KEY"] = "super_secret_key" 
 app.config['JWT_TOKEN_LOCATION'] = ['headers']
 
+
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 CORS(app, supports_credentials=True)
@@ -57,12 +61,58 @@ DB_Host = os.environ.get("DB_Host") or "localhost"
 DB_Port = os.environ.get("DB_Port") or "50002"
 MONGO_URI = os.getenv("MONGO_URI", f"mongodb://{DB_User}:{DB_Password}@{DB_Host}:{DB_Port}/sensor_database?authSource=admin")
 
-
+user_timezone = pytz.timezone("Europe/Prague")
+#Start Mongo client
 client = MongoClient(MONGO_URI)
 db = client["sensor_database"]
-user_timezone = pytz.timezone("Europe/Prague")
+fs = gridfs.GridFS(db)
+
+#collections
 sensors = db["sensors"]#sensors
+images = db["images"]
 user_collection = db["users"]
+
+picam2 = Picamera2()
+picam2.configure(picam2.create_still_configuration())
+
+@app.route("/capture", methods=["POST"])
+def capture_image():
+    """Capture an image from PiCamera2 and store it in MongoDB"""
+    picam2.start()
+    image = picam2.capture_array()
+    picam2.stop()
+
+    # Convert image to bytes
+    image_bytes = io.BytesIO()
+    Image.fromarray(image).save(image_bytes, format="JPEG")
+    image_bytes.seek(0)
+
+    # Store image in MongoDB
+    file_id = fs.put(image_bytes.read(), filename="camera_image.jpg")
+
+    return jsonify({"message": "Image captured and stored", "file_id": str(file_id)}), 201
+
+
+@app.route("/recent_image", methods=["GET"])
+def get_image(file_id):
+    """Retrieve an image from MongoDB and return it"""
+    try:
+        file_data = fs.get(file_id).read()
+        return send_file(io.BytesIO(file_data), mimetype="image/jpeg")
+    except Exception as e:
+        return jsonify({"error": str(e)}), 404
+
+@app.route('/create_image', methods=['POST'])
+@jwt_required()
+def create_image():
+    pipeline = {
+
+    }
+    pass
+@app.route('/get_image', methods=['GET'])
+@jwt_required()
+def get_image():
+    pass
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -77,11 +127,8 @@ def login():
         return jsonify({'message': 'Login Success', 'access_token': access_token}), 200
     return jsonify({'message': 'Invalid credentials'}), 401
 
-@app.route("/protected", methods=["GET"])
-@jwt_required()
-def protected():
-    current_user = get_jwt_identity()
-    return jsonify(logged_in_as=current_user)
+
+
 
 @app.route('/get_recent_data', methods=['GET'])
 @jwt_required()
