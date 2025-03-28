@@ -2,13 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import { Card, CardContent, Typography, Button, Box } from "@mui/material"; // Import Grid here
 import Grid from '@mui/material/Grid2';
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
-import { getSensorData, sendSensorData } from "../api"
+import { getSensorData, sendSensorData, getLatestImageFile, captureImageFile } from "../api"
 
 const Dashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const accessToken = localStorage.getItem("token"); //tohle bude v nějaké provideru
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [imgSrc, setImgSrc] = useState("");
   const [sensors, setSensors] = useState(
     {
       "ph_sensor": {},
@@ -25,10 +26,9 @@ const Dashboard = () => {
   );
   const sendSensorDataButton = async () => {
     const response = await sendSensorData({ accessToken });
-    console.log(response)
-    if (response?.status == 200) {
-
-    }
+  }
+  const sendImageDataButton = async () => {
+    const response = await captureImageFile({accessToken})
   }
   const handleSensors = async () => {
     setLoading(true);
@@ -51,22 +51,45 @@ const Dashboard = () => {
           }
         });
         console.log(sensorMapping);
-        setSensors(sensorMapping)
-        console.log(sensors)
+        setSensors(sensorMapping);
+        console.log(sensors);
       }
       else {
         setError(response.message);
       }
     }
     catch (err) {
-      setError(err.message)
+      setError(err.message);
     }
     finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
+  const handleImage = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await getLatestImageFile({ accessToken });
+      console.log(response);
+      
+      if (response?.status == 200) {
+        setImgSrc(`data:image/jpeg;base64,${response.data.data}`);
+      }
+      else {
+        setError(response.message);
+      }
+    }
+    catch (err) {
+      setError(err.message);
+    }
+    finally {
+      setLoading(false);
+    }
+
+  }
   useEffect(() => {
     handleSensors();
+    handleImage();
   }, [])
   const handleLogout = () => setIsAuthenticated(false);
 
@@ -79,6 +102,7 @@ const Dashboard = () => {
         background: "radial-gradient(circle, rgba(16,51,152,1) 0%, rgba(17,14,59,1) 50%, rgba(13,13,56,1) 95%);", // Blue gradient
       }}
     >
+
       <div style={{ padding: "24px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
           <Typography variant="h4">Sensor Dashboard</Typography>
@@ -106,7 +130,10 @@ const Dashboard = () => {
         </Grid>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
           <Button variant="contained" color="secondary" onClick={sendSensorDataButton}>Request sensor data</Button>
+          <Button variant="contained" color="secondary" onClick={sendImageDataButton}>Request new image</Button>
         </div>
+          
+      <img id="latest-image" src={imgSrc} alt="Latest Image" width="500"></img>
       </div>
     </Box>
   );

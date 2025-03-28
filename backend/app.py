@@ -3,15 +3,16 @@ import os
 import io
 import sys
 import random
-import datetime
+from datetime import datetime, timezone
 import pytz
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from pymongo import MongoClient, InsertOne
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
 from flask_bcrypt import Bcrypt
 import gridfs
+import base64
 from PIL import Image
 
 #import all sensors
@@ -75,7 +76,8 @@ user_collection = db["users"]
 picam2 = Picamera2()
 picam2.configure(picam2.create_still_configuration())
 
-@app.route("/capture", methods=["POST"])
+@app.route("/capture_image", methods=["POST"])
+@jwt_required()
 def capture_image():
     """Capture an image from PiCamera2 and store it in MongoDB"""
     picam2.start()
@@ -88,31 +90,45 @@ def capture_image():
     image_bytes.seek(0)
 
     # Store image in MongoDB
-    file_id = fs.put(image_bytes.read(), filename="camera_image.jpg")
+    filename = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S") + ".jpg"
+    file_id = fs.put(image_bytes.read(), filename=filename)
 
     return jsonify({"message": "Image captured and stored", "file_id": str(file_id)}), 201
 
 
-@app.route("/recent_image", methods=["GET"])
-def get_image(file_id):
-    """Retrieve an image from MongoDB and return it"""
+@app.route("/latest_image", methods=["GET"])
+@jwt_required()
+def get_latest_image():
+    """Retrieve the most recent image from MongoDB"""
     try:
+        latest_file = db.fs.files.find_one(sort=[("uploadDate", -1)])
+        if not latest_file:
+            return jsonify({"error": "No images found"}), 404
+
+        # Extract metadata
+        filename = latest_file.get("filename")
+        upload_date = latest_file.get("uploadDate")
+        file_size = latest_file.get("length")
+
+        file_id = latest_file["_id"]
         file_data = fs.get(file_id).read()
-        return send_file(io.BytesIO(file_data), mimetype="image/jpeg")
+
+        # Encode the image data to base64
+        encoded_image = base64.b64encode(file_data).decode("utf-8")
+
+        response_data = {
+            "filename": filename,
+            "upload_date": upload_date.isoformat() if upload_date else None,
+            "file_size": file_size,
+            "data": encoded_image,
+        }
+
+        # Send back the base64 data in JSON
+        return jsonify(response_data)
+    
     except Exception as e:
-        return jsonify({"error": str(e)}), 404
+        return jsonify({"error": str(e)}), 500
 
-@app.route('/create_image', methods=['POST'])
-@jwt_required()
-def create_image():
-    pipeline = {
-
-    }
-    pass
-@app.route('/get_image', methods=['GET'])
-@jwt_required()
-def get_image():
-    pass
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -173,7 +189,7 @@ def add_data():
         {
             "sensor_id": "water_temp_sensor",
             "report": {
-                "timestamp": datetime.datetime.now(tz=pytz.utc),
+                "timestamp": datetime.now(tz=pytz.utc),
                 "value": water_temp,
                 "unit": "°C",
             },
@@ -181,7 +197,7 @@ def add_data():
         {
             "sensor_id": "ph_sensor",
             "report": {
-                "timestamp": datetime.datetime.now(tz=pytz.utc),
+                "timestamp": datetime.now(tz=pytz.utc),
                 "value": ph_value,
                 "unit": "pH",
             }
@@ -189,7 +205,7 @@ def add_data():
         {
             "sensor_id": "ec_sensor",
             "report": {
-                "timestamp": datetime.datetime.now(tz=pytz.utc),
+                "timestamp": datetime.now(tz=pytz.utc),
                 "value": ec_value,
                 "unit": "mS/cm",
             },
@@ -197,7 +213,7 @@ def add_data():
         {
             "sensor_id": "tds_sensor",
             "report": {
-                "timestamp": datetime.datetime.now(tz=pytz.utc),
+                "timestamp": datetime.now(tz=pytz.utc),
                 "value": tds_ppm_data,
                 "unit": "ppm",
             }
@@ -205,7 +221,7 @@ def add_data():
         {
             "sensor_id": "water_level_sensor",
             "report": {
-                "timestamp": datetime.datetime.now(tz=pytz.utc),
+                "timestamp": datetime.now(tz=pytz.utc),
                 "value": water_lvl_percentage,
                 "unit": "%",
             }
@@ -213,7 +229,7 @@ def add_data():
         {
             "sensor_id": "water_flow_sensor",
             "report": {
-                "timestamp": datetime.datetime.now(tz=pytz.utc),
+                "timestamp": datetime.now(tz=pytz.utc),
                 "value": liters_per_min,
                 "unit": "l/min",
             }
@@ -221,7 +237,7 @@ def add_data():
         {
             "sensor_id": "air_temp_sensor",
             "report":{
-                "timestamp": datetime.datetime.now(tz=pytz.utc),
+                "timestamp": datetime.now(tz=pytz.utc),
                 "value": temp,
                 "unit": "°C",
             }
@@ -229,7 +245,7 @@ def add_data():
         {
             "sensor_id": "humidity_sensor",
             "report":{
-                "timestamp": datetime.datetime.now(tz=pytz.utc),
+                "timestamp": datetime.now(tz=pytz.utc),
                 "value": humid,
                 "unit": "%",
             }
@@ -237,7 +253,7 @@ def add_data():
         {
             "sensor_id": "vpd_sensor",
             "report":{
-                "timestamp": datetime.datetime.now(tz=pytz.utc),
+                "timestamp": datetime.now(tz=pytz.utc),
                 "value": VPD,
                 "unit": "Pa",
             }

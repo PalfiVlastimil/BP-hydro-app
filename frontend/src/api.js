@@ -60,13 +60,10 @@ export const sendSensorData = async(userParams) => {
     return error.response ? error.response.data : { message: 'Unknown error' };
   }
 }
-export const createImageFile = async(userParams) => {
+export const captureImageFile = async(userParams) => {
   const {accessToken} = userParams;
   try {
-    const response = await axios.post(`${BASE_URL}/create_image`, {
-      username,
-      password
-    },
+    const response = await axios.post(`${BASE_URL}/capture_image`, {},
     {
       headers: {
         'Content-Type': 'application/json',
@@ -82,10 +79,10 @@ export const createImageFile = async(userParams) => {
     return error.response ? error.response.data : { message: 'Unknown error' };
   }
 }
-export const getImageFile = async(userParams) => {
+export const getLatestImageFile = async(userParams) => {
   const {accessToken} = userParams;
   try {
-    const response = await axios.get(`${BASE_URL}/get_image`,
+    const response = await axios.get(`${BASE_URL}/latest_image`,
     {
       headers: {
         'Content-Type': 'application/json',

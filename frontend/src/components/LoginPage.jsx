@@ -20,7 +20,6 @@ function LoginPage() {
     } else {
       setError(response.message);
     }
-
   };
 
   return (
