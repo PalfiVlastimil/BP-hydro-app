@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 const BASE_URL = `http://10.0.1.53:5000`;
 
 export const postLogin = async(userParams) => {
@@ -38,6 +39,21 @@ export const getSensorData = async(userParams) => {
   } catch (error) {
     // Vrátíme chybu, pokud k ní dojde
     console.error("Error during retrieving recent sensor data:", error);
+    // pokud uživatelův JWT token vypršel, hoď error notifikaci a odeber mu token
+    if(error.response.status == 401){
+      toast.error('🦄 Wow so easy!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+        });
+
+    }
     return error.response ? error.response.data : { message: 'Unknown error' };
   }
 }

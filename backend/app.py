@@ -3,7 +3,7 @@ import os
 import io
 import sys
 import random
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import pytz
 
 from flask import Flask, request, jsonify, send_file
@@ -46,7 +46,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_strong_secret_key'
 app.config["JWT_SECRET_KEY"] = "super_secret_key" 
 app.config['JWT_TOKEN_LOCATION'] = ['headers']
-
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=15)
 
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
@@ -143,7 +143,12 @@ def login():
         return jsonify({'message': 'Login Success', 'access_token': access_token}), 200
     return jsonify({'message': 'Invalid credentials'}), 401
 
-
+@app.route("/refresh", methods=["POST"])
+@jwt_required(refresh=True)
+def refresh():
+    identity = get_jwt_identity()
+    access_token = create_access_token(identity=identity)
+    return jsonify(access_token=access_token)
 
 
 @app.route('/get_recent_data', methods=['GET'])

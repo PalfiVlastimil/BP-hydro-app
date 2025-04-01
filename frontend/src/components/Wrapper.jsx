@@ -2,9 +2,12 @@ import { BrowserRouter, Routes, Route, useRoutes } from "react-router-dom";
 import LoginPage from "./LoginPage";
 import Dashboard from "./Dashboard";
 import PrivateRoute from "./PrivateRoute";
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
+    <>
+      <ToastContainer/>
       <Routes>
         <Route exact path="/" element={<LoginPage />} />
         <Route exact path="/login" element={<LoginPage />} />
@@ -17,6 +20,7 @@ function App() {
           }
         />
       </Routes>
+    </>
   );
 }
 

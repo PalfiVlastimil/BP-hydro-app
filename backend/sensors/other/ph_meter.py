@@ -26,7 +26,7 @@ def read_PH_data(water_temperature):
     ads1115.setAddr_ADS1115(0x48)
     # Get the Digital Value of Analog of selected channel
     ads1115.setGain(ADS1115_REG_CONFIG_PGA_6_144V)
-    adc0 = ads1115.readVoltage(0)
+    adc0 = ads1115.readVoltage(1)
     #print("A0:%dmV "%(adc0['r']))
     #Calibrate the calibration data
     PH = ph.read_PH(adc0['r'], water_temperature)+calibration_value 
@@ -47,7 +47,7 @@ def loop_PH_data(water_temperature):
       #Sets the gain and input voltage range.
       ads1115.setGain(ADS1115_REG_CONFIG_PGA_6_144V)
       # Get the Digital Value of Analog of selected channel
-      adc0 = ads1115.readVoltage(0)
+      adc0 = ads1115.readVoltage(1)
       #Calibrate the calibration data
       PH = ph.read_PH(adc0['r'], water_temperature)+calibration_value
       print ("Temperature:%.1f ^C PH:%.2f" %(water_temperature,PH))
@@ -65,7 +65,7 @@ def loop_voltage_calibration():
       ads1115.setAddr_ADS1115(0x48)
       # Get the Digital Value of Analog of selected channel
       ads1115.setGain(ADS1115_REG_CONFIG_PGA_6_144V)
-      adc0 = ads1115.readVoltage(0)
+      adc0 = ads1115.readVoltage(1)
       print("A0:%dmV "%(adc0['r']))
       #Calibrate the calibration data
       ph.calibration(adc0['r'])

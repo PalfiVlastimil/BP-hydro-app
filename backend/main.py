@@ -26,7 +26,7 @@ GROVE_GPIO_12_PIN    = 12
 GROVE_GPIO_26_PIN    = 26
 GROVE_I2C_GPIO_0_PIN = 0
 GROVE_I2C_GPIO_1_PIN = 1
-picam2 = Picamera2()
+#picam2 = Picamera2()
 app_is_running = True
 
 def clear_console():
@@ -90,9 +90,9 @@ def switch_menu(number):
     #water_flow_meter.loop_sensor()
     print(water_flow_meter.read_flow_sensor())
   elif number == 10:
-    global picam2
+    #global picam2
     timestr = time.strftime("%d%m%y-%H%M%S")
-    picam2.start_and_record_video(timestr + ".mp4", duration=5)
+    #cpicam2.start_and_record_video(timestr + ".mp4", duration=5)
   else:
     print("Nevalidní vstup. Zkuste to ještě jednou.")
     return
