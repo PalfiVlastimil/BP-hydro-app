@@ -40,7 +40,6 @@ function LoginPage() {
           width: 320,
           textAlign: "center",
           borderRadius: 3,
-          backgroundColor: "white",
         }}
       >
         <Typography variant="h5" color="primary" gutterBottom>
@@ -76,7 +75,7 @@ function LoginPage() {
           <Button
             type="submit"
             variant="contained"
-            color="primary"
+            color="secondary"
             fullWidth
             sx={{ mt: 2, borderRadius: 2 }}
           >

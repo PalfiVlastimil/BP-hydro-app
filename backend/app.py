@@ -69,12 +69,33 @@ db = client["sensor_database"]
 fs = gridfs.GridFS(db)
 
 #collections
-sensors = db["sensors"]#sensors
+sensors_collection = db["sensors"]#sensors
 images = db["images"]
 user_collection = db["users"]
 
 picam2 = Picamera2()
 picam2.configure(picam2.create_still_configuration())
+
+@app.route("/all_sensor_reports")
+@jwt_required()
+def get_all_sensor_reports():
+    cursor = sensors_collection.find({})
+    result = {}
+    for doc in cursor:
+        sensor = doc.get("sensor_id")
+        report = doc.get("report", {})
+        
+        if not sensor or "timestamp" not in report or "value" not in report:
+            continue
+
+        if sensor not in result:
+            result[sensor] = {"timestamp": [], "value": []}
+
+        result[sensor]["timestamp"].append(report["timestamp"])
+        result[sensor]["value"].append(report["value"])
+    print(result)
+    return jsonify({"message": "Sensor data received successfully", "result": result}), 200
+
 
 @app.route("/capture_image", methods=["POST"])
 @jwt_required()
@@ -129,7 +150,6 @@ def get_latest_image():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
 @app.route("/login", methods=["POST"])
 def login():
     data = request.json
@@ -149,7 +169,6 @@ def refresh():
     identity = get_jwt_identity()
     access_token = create_access_token(identity=identity)
     return jsonify(access_token=access_token)
-
 
 @app.route('/get_recent_data', methods=['GET'])
 @jwt_required()
@@ -174,10 +193,8 @@ def get_data():
         }
     ]
     # Retrive from the database
-    result = list(sensors.aggregate(pipeline))
+    result = list(sensors_collection.aggregate(pipeline))
     return jsonify(({"message": "Data retrived successfully", "sensors": result})), 200
-
-
 @app.route('/save_sensor_data', methods=['POST'])
 @jwt_required()
 def add_data():
@@ -265,7 +282,7 @@ def add_data():
         },
     ]
     #Add to database
-    sensors.insert_many(sensor_readings)
+    sensors_collection.insert_many(sensor_readings)
     return jsonify({"message": "Data added successfully", "inserted_count": len(sensor_readings)}), 201
 
 

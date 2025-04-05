@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = `http://10.0.1.53:5000`;
+const BASE_URL = `${window.location.protocol}//${window.location.hostname}:5000`;
 
 export const postLogin = async(userParams) => {
   const {username, password} = userParams;
@@ -40,20 +40,6 @@ export const getSensorData = async(userParams) => {
     // Vrátíme chybu, pokud k ní dojde
     console.error("Error during retrieving recent sensor data:", error);
     // pokud uživatelův JWT token vypršel, hoď error notifikaci a odeber mu token
-    if(error.response.status == 401){
-      toast.error('🦄 Wow so easy!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce,
-        });
-
-    }
     return error.response ? error.response.data : { message: 'Unknown error' };
   }
 }
@@ -111,6 +97,25 @@ export const getLatestImageFile = async(userParams) => {
   } catch (error) {
     // Vrátíme chybu, pokud k ní dojde
     console.error("Error during getting image:", error);
+    return error.response ? error.response.data : { message: 'Unknown error' };
+  }
+}
+export const getAllSensorReports = async(userParams) => {
+  const {accessToken} = userParams;
+  try {
+    const response = await axios.get(`${BASE_URL}/all_sensor_reports`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      }
+    }
+  );
+    // Vrátíme response data
+    return response;
+  } catch (error) {
+    // Vrátíme chybu, pokud k ní dojde
+    console.error("Error during getting all sensor data:", error);
     return error.response ? error.response.data : { message: 'Unknown error' };
   }
 }

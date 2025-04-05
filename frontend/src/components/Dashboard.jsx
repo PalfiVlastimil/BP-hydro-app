@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Card, CardContent, Typography, Button, Box } from "@mui/material"; // Import Grid here
 import Grid from '@mui/material/Grid2';
-import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
-import { getSensorData, sendSensorData, getLatestImageFile, captureImageFile } from "../api"
+import { getSensorData, sendSensorData, getLatestImageFile, captureImageFile, getAllSensorReports } from "../api"
 import { useNavigate } from "react-router-dom";
 import { toast, Bounce } from 'react-toastify';
+import Chart from "./Chart";
+
 
 
 const Dashboard = () => {
@@ -13,7 +14,7 @@ const Dashboard = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [imgSrc, setImgSrc] = useState("");
-  const [sensors, setSensors] = useState(
+  const [recSensors, setRecSensors] = useState(
     {
       "ph_sensor": {},
       "ec_sensor": {},
@@ -69,7 +70,7 @@ const Dashboard = () => {
       showTokenExpireToast(response.msg)
     }
     console.log(response)
-    
+
 
   }
   const sendImageDataButton = async () => {
@@ -83,6 +84,7 @@ const Dashboard = () => {
     }
 
   }
+  
   const handleSensors = async () => {
     setLoading(true);
     setError(null);
@@ -93,19 +95,14 @@ const Dashboard = () => {
 
       if (response?.status == 200) {
 
-        const sensorMapping = { ...sensors };
+        const sensorMapping = { ...recSensors };
 
         data.sensors.forEach((sensor, index) => {
-          if (sensorMapping[sensor.sensor_id]) {
-            Object.assign(sensorMapping[sensor.sensor_id], sensor.report);
-          }
-          else {
-            console.warn(`Sensor "${sensor.sensor_id}" not found.`);
-          }
+          sensorMapping[sensor.sensor_id] = { ...sensor.report };
         });
         console.log(sensorMapping);
-        setSensors(sensorMapping);
-        console.log(sensors);
+        setRecSensors(sensorMapping);
+        console.log(recSensors);
       }
       else if (response.msg == "Token has expired") {
         showTokenExpireToast(response.msg)
@@ -149,7 +146,7 @@ const Dashboard = () => {
   useEffect(() => {
     handleSensors();
     handleImage();
-  }, [accessToken])
+  }, [])
 
   return (
     <Box
@@ -166,9 +163,9 @@ const Dashboard = () => {
           <Typography variant="h4">Sensor Dashboard</Typography>
           <Button variant="contained" color="secondary" onClick={logoutButton}>Logout</Button>
         </div>
-        <Grid container spacing={2}>
-          {Object.keys(sensors).map((sensorKey) => {
-            const sensorData = sensors[sensorKey]; // Access the sensor data by key
+        <Grid container spacing={2} >
+          {Object.keys(recSensors).map((sensorKey) => {
+            const sensorData = recSensors[sensorKey]; // Access the sensor data by key
             const sensorValue = sensorData.value || 0; // Example of extracting a specific property from sensor data, defaulting to 0 if not present
             const sensorUnit = sensorData.unit || 0;
             const sensorTime = sensorData.timestamp
@@ -190,8 +187,13 @@ const Dashboard = () => {
           <Button variant="contained" color="secondary" onClick={sendSensorDataButton}>Request sensor data</Button>
           <Button variant="contained" color="secondary" onClick={sendImageDataButton}>Request new image</Button>
         </div>
+        
+        <Typography variant="h4">Sensor Chart</Typography>
+        <Chart/>
+        
+        
         <Typography variant="h4">Camera</Typography>
-        <img id="latest-image" src={imgSrc} alt="Latest Image" width="500"></img>
+        <img id="latest-image" src={imgSrc} alt="Latest Image" width="800"></img>
       </div>
     </Box>
   );
