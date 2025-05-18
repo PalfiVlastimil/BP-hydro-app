@@ -31,7 +31,7 @@ class DHT22:
     def calculate_VPD(self):
         """
             Calculates water pressure deficit
-            temp: air temperatur
+            temp: air temperature
             humid: relative humidity
             returns VPD in Pascal (Pa)
         """

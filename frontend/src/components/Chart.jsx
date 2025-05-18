@@ -21,21 +21,12 @@ const options = [
   'Pyxis',
 ];
 
-const Chart = () => {
+
+const Chart = ({sensors}) => {
   const accessToken = localStorage.getItem("token");
-  const [sensors, setSensors] = useState({});
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [timeRange, setTimeRange] = useState("7d");
-
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const [timeRange, setTimeRange] = useState("all");
 
   const getCutoffDate = (range) => {
     const now = new Date();
@@ -123,34 +114,6 @@ const Chart = () => {
     }
   ];
 
-
-
-  const handleAllSensorData = async () => {
-    setLoading(true);
-    setError(null);
-    const response = await getAllSensorReports({ accessToken });
-    console.log(response)
-    try {
-      if (response?.status == 200) {
-        setSensors(response.data)
-      }
-      else if (response.msg == "Token has expired") {
-        showTokenExpireToast(response.msg)
-      }
-      else {
-        setError(response.message);
-      }
-    }
-    catch (err) {
-      setError(err.message);
-    }
-    finally {
-      setLoading(false);
-    }
-  }
-  useEffect(() => {
-    handleAllSensorData();
-  }, [])
   return (
     <>
       <select value={timeRange} onChange={(e) => setTimeRange(e.target.value)}>

@@ -2,15 +2,15 @@
 import os
 import io
 import sys
-import random
 from datetime import datetime, timezone, timedelta
 import pytz
+from dotenv import load_dotenv
 
 from flask import Flask, request, jsonify, send_file
 from pymongo import MongoClient, InsertOne
 from flask_cors import CORS
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
 from flask_bcrypt import Bcrypt
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
 import gridfs
 import base64
 from PIL import Image
@@ -20,7 +20,6 @@ from PIL import Image
 sys.path.append('sensors/grove')
 sys.path.append('sensors/other')
 from grove_dht22 import DHT22
-from grove_servo import GroveServo
 from grove_water_level_sensor import GroveWaterLevelSensor
 from grove_tds import GroveTDS
 #importing modules
@@ -55,22 +54,25 @@ users = {"admin": "password123"}
 
 #app.config
 # Connect to MongoDB
-PORT = os.environ.get("PORT") or 8081
-DB_User = os.environ.get("DB_User") or "admin"
-DB_Password = os.environ.get("DB_Password") or "password"
-DB_Host = os.environ.get("DB_Host") or "localhost"
-DB_Port = os.environ.get("DB_Port") or "50002"
+load_dotenv("../.env")
+DB_User = os.environ.get("DB_User")
+print(DB_User)
+DB_Password = os.environ.get("DB_Password")
+print(DB_Password)
+DB_Host = os.environ.get("DB_Host") 
+print(DB_Host)
+DB_Port = os.environ.get("DB_Port")
+print(DB_Port)
 MONGO_URI = os.getenv("MONGO_URI", f"mongodb://{DB_User}:{DB_Password}@{DB_Host}:{DB_Port}/sensor_database?authSource=admin")
 
 user_timezone = pytz.timezone("Europe/Prague")
-#Start Mongo client
+# Start Mongo client
 client = MongoClient(MONGO_URI)
 db = client["sensor_database"]
 fs = gridfs.GridFS(db)
 
-#collections
-sensors_collection = db["sensors"]#sensors
-images = db["images"]
+# Database collections
+sensors_collection = db["sensors"]
 user_collection = db["users"]
 
 picam2 = Picamera2()
@@ -93,7 +95,6 @@ def get_all_sensor_reports():
 
         result[sensor]["timestamp"].append(report["timestamp"])
         result[sensor]["value"].append(report["value"])
-    print(result)
     return jsonify({"message": "Sensor data received successfully", "result": result}), 200
 
 
@@ -153,15 +154,54 @@ def get_latest_image():
 @app.route("/login", methods=["POST"])
 def login():
     data = request.json
+    email = data.get("email")
     username = data.get("username")
     password = data.get("password")
+    user_exists = user_collection.find_one({"email": email})
+    if not user_exists:
+        return jsonify({'message': 'User doesn\'t exist'}), 400
+    hashed_pass = user_exists["password"]
 
-    #users = users; # Zde bude call na login informace
-    #if users and bcrypt.check_password_hash(users.get(password), password):
-    if users.get(username) == password:
+    # check password with a hashed password stored in database
+    if bcrypt.check_password_hash(hashed_pass, password):
         access_token = create_access_token(identity=username)
         return jsonify({'message': 'Login Success', 'access_token': access_token}), 200
     return jsonify({'message': 'Invalid credentials'}), 401
+
+@app.route("/register", methods=["POST"])
+def register():
+    data = request.json
+    email = data.get("email")
+    username = data.get("username")
+    password = data.get("password")
+    # Prepared salt of the password
+    saltRounds = 12
+    # Hashing password
+    hashed_pass = bcrypt.generate_password_hash(password, saltRounds)
+    # Check if any user exists
+    user_exists = user_collection.find_one({"email": email})
+    if user_exists:
+        jsonify({'message': 'User already exists'}), 400
+    # Create BSON object for the database
+    pipeline = {
+            "email": email,
+            "username": username,
+            "password": hashed_pass,
+        }
+
+    # Insert the user to the database
+    user_collection.insert_one(pipeline)
+    if bcrypt.check_password_hash(hashed_pass, password):
+        return jsonify({'message': 'User registered, please login into your account'}), 201
+    return jsonify({'message': 'Invalid credentials'}), 401
+
+@app.route("/user_exists", methods=["GET"])
+def getUserExists():
+    user_exists = user_collection.find({})
+    if len(list(user_exists)) > 0:
+        return jsonify({'message': 'User exists', "userExists": True, "collection": list(user_exists)}), 200
+    return jsonify({'message': 'User doesn\'t exist', "userExists": False, "collection": list(user_exists)}), 200
+
 
 @app.route("/refresh", methods=["POST"])
 @jwt_required(refresh=True)
@@ -206,7 +246,6 @@ def add_data():
     ec_value = tds_sensor.calculate_EC()
     VPD = dht22_sensor.calculate_VPD()
     liters_per_min = water_flow_meter.read_flow_sensor()
-    print(client)
     sensor_readings = [
         {
             "sensor_id": "water_temp_sensor",

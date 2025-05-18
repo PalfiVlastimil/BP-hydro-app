@@ -3,9 +3,10 @@ import axios from 'axios';
 const BASE_URL = `${window.location.protocol}//${window.location.hostname}:5000`;
 
 export const postLogin = async(userParams) => {
-  const {username, password} = userParams;
+  const {email, username, password} = userParams;
   try {
     const response = await axios.post(`${BASE_URL}/login`, {
+      email,
       username,
       password
     },
@@ -22,6 +23,47 @@ export const postLogin = async(userParams) => {
     console.error("Error during login:", error);
     return error.response ? error.response.data : { message: 'Unknown error' };
   }
+}
+export const postRegister = async(userParams) => {
+  const {email, username, password, repeatPassword} = userParams;
+  try {
+    const response = await axios.post(`${BASE_URL}/register`, {
+      email,
+      username,
+      password,
+      repeatPassword
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }
+  );
+    // Vrátíme response data
+    return response;
+  } catch (error) {
+    // Vrátíme chybu, pokud k ní dojde
+    console.error("Error during login:", error);
+    return error.response ? error.response.data : { message: 'Unknown error' };
+  }
+}
+export const getUserExists = async() => {
+  try {
+    const response = await axios.get(`${BASE_URL}/user_exists`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }
+  );
+    // Vrátíme response data
+    return response;
+  } catch (error) {
+    // Vrátíme chybu, pokud k ní dojde
+    console.error("Error during user's existence:", error);
+    return error.response ? error.response.data : { message: 'Unknown error' };
+  }
+
 }
 export const getSensorData = async(userParams) => {
   const {accessToken} = userParams;

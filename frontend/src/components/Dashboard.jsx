@@ -3,9 +3,8 @@ import { Card, CardContent, Typography, Button, Box } from "@mui/material"; // I
 import Grid from '@mui/material/Grid2';
 import { getSensorData, sendSensorData, getLatestImageFile, captureImageFile, getAllSensorReports } from "../api"
 import { useNavigate } from "react-router-dom";
-import { toast, Bounce } from 'react-toastify';
 import Chart from "./Chart";
-
+import { showTokenExpireToast, showSuccessToast } from "./toasts";
 
 
 const Dashboard = () => {
@@ -14,6 +13,7 @@ const Dashboard = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [imgSrc, setImgSrc] = useState("");
+  const [sensors, setSensors] = useState({});
   const [recSensors, setRecSensors] = useState(
     {
       "ph_sensor": {},
@@ -28,45 +28,22 @@ const Dashboard = () => {
     }
 
   );
-  const showTokenExpireToast = async (message) => {
-    toast.error(message, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      transition: Bounce,
-    });
-    localStorage.removeItem("token")
-    navigate("/login")
-  }
-  const showSuccessToast = async (message) => {
-    toast.success(message, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      transition: Bounce,
-    });
-  }
+  
   const logoutButton = async () => {
     localStorage.removeItem("token");
-    navigate("/login")
+    navigate("/")
     showSuccessToast("Successfully logged out")
   }
   const sendSensorDataButton = async () => {
     const response = await sendSensorData({ accessToken });
     if (response.status == 201) {
       showSuccessToast("Data successfuly requested")
+      await handleSensors();
+      await handleAllSensorData();
     }
     if (response.msg == "Token has expired") {
+      localStorage.removeItem("token")
+      navigate("/")
       showTokenExpireToast(response.msg)
     }
     console.log(response)
@@ -78,8 +55,11 @@ const Dashboard = () => {
     console.log(response)
     if (response.status == 201) {
       showSuccessToast("Data successfuly requested")
+      await handleImage()
     }
     if (response.msg == "Token has expired") {
+      localStorage.removeItem("token")
+      navigate("/")
       showTokenExpireToast(response.msg)
     }
 
@@ -105,6 +85,8 @@ const Dashboard = () => {
         console.log(recSensors);
       }
       else if (response.msg == "Token has expired") {
+        localStorage.removeItem("token")
+        navigate("/")
         showTokenExpireToast(response.msg)
       }
       else {
@@ -129,6 +111,8 @@ const Dashboard = () => {
         setImgSrc(`data:image/jpeg;base64,${response.data.data}`);
       }
       else if (response.msg == "Token has expired") {
+        localStorage.removeItem("token")
+        navigate("/")
         showTokenExpireToast(response.msg)
       }
       else {
@@ -143,9 +127,33 @@ const Dashboard = () => {
     }
 
   }
+    const handleAllSensorData = async () => {
+    setLoading(true);
+    setError(null);
+    const response = await getAllSensorReports({ accessToken });
+    console.log(response)
+    try {
+      if (response?.status == 200) {
+        setSensors(response.data)
+      }
+      else if (response.msg == "Token has expired") {
+        showTokenExpireToast(response.msg)
+      }
+      else {
+        setError(response.message);
+      }
+    }
+    catch (err) {
+      setError(err.message);
+    }
+    finally {
+      setLoading(false);
+    }
+  }
   useEffect(() => {
     handleSensors();
     handleImage();
+    handleAllSensorData();
   }, [])
 
   return (
@@ -189,7 +197,7 @@ const Dashboard = () => {
         </div>
         
         <Typography variant="h4">Sensor Chart</Typography>
-        <Chart/>
+        <Chart sensors={sensors}/>
         
         
         <Typography variant="h4">Camera</Typography>

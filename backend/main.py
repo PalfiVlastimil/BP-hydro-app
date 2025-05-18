@@ -92,7 +92,7 @@ def switch_menu(number):
   elif number == 10:
     #global picam2
     timestr = time.strftime("%d%m%y-%H%M%S")
-    #cpicam2.start_and_record_video(timestr + ".mp4", duration=5)
+    #picam2.start_and_record_video(timestr + ".mp4", duration=5)
   else:
     print("Nevalidní vstup. Zkuste to ještě jednou.")
     return
