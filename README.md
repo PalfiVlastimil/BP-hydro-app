@@ -1,48 +1,47 @@
+---
 # Hydroponics sensors app
+Aplikace slouží k ukládání informací ze senzorů na Raspberry PI 4/5 pro monitorování vlastností hydroponického květinače. Na zařízení RPI je nastaven crontab pro automatické ukládání informací do databáze pomocí API v backendu. Ten samý backend poté posílá informace na React frontend. Uživatel má možnost si požádat of fotku květináče či informace ze senzorů.
+- Aplikace se skládá ze tří částí:
+	- Backend - Flask API
+	- Frontend - React aplikace
+	- Databáze - MongoDB
 
-- Start virtual environment for testing locally without Docker:
-```shell
-cd backend/lib/grove.py/
-virtualenv -p python3 backend/venv --system-site-packages #for grove.py
-pip install grove.py
-source backend/venv/bin/activate
-deactivate
+
+
+## Spuštění aplikace
+### Backend
+```bash
+cd backend
+source venv/bin/activate
+pip install requirements.txt
+python main.py 
+
 ```
-Testing script:
-```shell
+
+### Databáze
+- Používá se Docker a docker-compose
+- build s pomocí .env souboru
+- v .env se vyskytuje defaultní heslo, které se musí poté změnit
+- v rootu projektu:
+```bash
+docker compose --env-file .env up --build # pro Linux docker engine
+```
+### Frontend
+- React aplikace
+```bash
+cd frontend
+npm install
+npm run dev -- --host
+```
+### Testovací skript:
+- Tento skript se používal na začátku projektu pro otestovaní funkčnosti senzorů
+- Poté se přestal používat, skript nebyl nijak měněn
+- Pro odpojené senzory nebude fungovat
+```bash
 python backend/main.py
 ```
 
-Other useful commands to recognize circuits
-```shell
-sudo i2cdetect -y 1
-sudo i2cget -y 1 0x08
 
-iwgetid -r
-sudo nmtui
-```
-
-## To start a Docker
-- Be sure to run Docker Desktop and Docker Compose
-- build with .env file:
-```bash
-docker-compose --env-file config.env up --build #for Windows docker engine
-docker compose --env-file config.env up --build #for Linux docker engine
-```
-
-## For backend
-- backend's docker was removed due to error that couldn't be resolved in time
-- to use it anyway, these are commands to initialize backend:
-```bash
-python -m venv venv --system-site-packages
-
-source backend/venv/bin/activate
-pip3 install -r backend/requirements.txt
-gunicorn -w 4 --preload  -b 0.0.0.0:5000 app:app
-deactivate
-```
-
-## Triggering data sending:
-```bash
-curl -X POST http://localhost:5000/save_sensor_data -H "Content-Type: application/json"
-```
+## Známé limity projektu
+- Raspberry PI se nenabootuje, pokud se neodpojí kabel od ADS1115, jakmile kontrolka svítí zeleně, lze znovu připojit
+- Problém s knihovnou grove.py, kdy komponenta Grove Base Hat for Raspberry PI nemusí fungovat kvůli jiné adrese v adc.py skriptu, musí se v baličku manuálně změnit. Podrobněji [zde](https://wiki.seeedstudio.com/Grove_Base_Hat_for_Raspberry_Pi/#software)
